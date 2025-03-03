@@ -5,9 +5,6 @@
 // Test here for now.
 void playGame() {
 	initializeGame();
-	board[0][4] = 1;
-    board[0][3] = 1;
-	displayBoard(board);
 
 	// I disabled this loop for now but this should be the final result
 	/* int num;
