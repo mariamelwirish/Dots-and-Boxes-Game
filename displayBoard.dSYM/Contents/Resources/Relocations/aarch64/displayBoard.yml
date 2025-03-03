@@ -1,0 +1,8 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/alaamohamad/Documents/CMPS270/Dots-and-Boxes-Game/displayBoard'
+relocations:
+  - { offset: 0x26, size: 0x8, addend: 0x0, symName: _displayBoard, symObjAddr: 0x0, symBinAddr: 0x100003C10, symSize: 0x2CC }
+  - { offset: 0x41, size: 0x8, addend: 0x0, symName: _displayBoard, symObjAddr: 0x0, symBinAddr: 0x100003C10, symSize: 0x2CC }
+  - { offset: 0x8F, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x2CC, symBinAddr: 0x100003EDC, symSize: 0x90 }
+...
