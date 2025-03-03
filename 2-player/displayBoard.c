@@ -1,7 +1,5 @@
 #include <stdio.h>
-
-#define	ROW_SIZE 5
-#define COL_SIZE 6
+#include "displayBoard.h"
 
 void displayBoard(int board[2 * ROW_SIZE - 1][2 * COL_SIZE - 1]) {
     int row, col;
@@ -31,14 +29,4 @@ void displayBoard(int board[2 * ROW_SIZE - 1][2 * COL_SIZE - 1]) {
         }
         printf("\n");
     }
-}
-
-int main() {
-    int board[2 * ROW_SIZE - 1][2 * COL_SIZE - 1] = {0}; 
-
-    board[0][4] = 1; 
-    board[1][4] = 1; 
-
-    displayBoard(board);
-    return 0;
 }
