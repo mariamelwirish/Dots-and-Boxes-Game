@@ -1,44 +1,50 @@
 #include <stdio.h>
 
-void displayBoard(int gridSize, int board[][2 * gridSize - 1]) {
-    int row, col;
+#define ROWS 4
+#define COLS 5
 
-    for (row = 0; row < 2 * gridSize - 1; row++) {
-        for (col = 0; col < 2 * gridSize - 1; col++) {
-            if (row % 2 == 0 && col % 2 == 0) {
-                printf("• "); 
-            } else if (row % 2 == 0 && col % 2 == 1) {
-                if (board[row][col] == 1) {
-                    printf("─ ");
-                } else {
-                    printf("  "); 
-                }
-            } else if (row % 2 == 1 && col % 2 == 0) {
-                if (board[row][col] == 1) {
+void displayBoard(int grid[ROWS][COLS]) {
+    printf("  ");
+    for (int c = 0; c <= COLS; c++) { 
+        printf("%d ", c);
+    }
+    printf("\n");
+
+    for (int r = 0; r <= ROWS; r++) {
+        printf("%d ", r); 
+        for (int c = 0; c <= COLS; c++) {
+            printf("."); 
+
+            if (c < COLS && grid[r][c] == 1 && grid[r][c + 1] == 1) {
+                printf("-"); 
+            } else {
+                printf(" "); 
+            }
+        }
+        printf("\n");
+
+        if (r < ROWS) {
+            printf("  "); 
+            for (int c = 0; c <= COLS; c++) {
+                if (grid[r][c] == 1 && grid[r + 1][c] == 1) {
                     printf("| "); 
                 } else {
                     printf("  "); 
                 }
-            } else {
-                if (board[row][col] == 0) {
-                    printf("  "); 
-                } else {
-                    printf("%c ", board[row][col]); 
-                }
             }
+            printf("\n");
         }
-        printf("\n");
     }
 }
 
 int main() {
-    int gridSize = 4;
-    int board[7][7] = {0}; 
+    int grid[ROWS][COLS] = {0}; 
 
-    board[0][1] = 1; 
-    board[1][0] = 1; 
-    board[1][2] = 'A'; 
+    
+    grid[0][4] = 1;
+    grid[0][3] = 1;
 
-    displayBoard(gridSize, board);
+    displayBoard(grid);
+
     return 0;
 }
