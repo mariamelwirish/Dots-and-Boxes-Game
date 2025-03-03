@@ -10,8 +10,8 @@ void playGame() {
 	/*
 	do { 
 		printf("Player %c's turn. Enter the row and column of the first dot (e.g., A0 -> 0 0) and second dot: \n", (cur_player == 0 ? 'A' : 'B'));
-		// int *x1, *y1, *x2, *y2;
-		// if(getPlayerMove(&x1, &y1, &x2, &y2)) {
+		// int r1, c1, r2, c2;
+		// if(getPlayerMove(&r1, &c1, &r2, &c2)) {
 			// drawLine();
 			// checkBox();
 			// calculateScores();
