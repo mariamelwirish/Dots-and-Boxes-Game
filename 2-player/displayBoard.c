@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "displayBoard.h"
+#include "initializeGame.h"
 
 void displayBoard(int board[2 * ROW_SIZE - 1][2 * COL_SIZE - 1]) {
     int row, col;
