@@ -4,8 +4,8 @@
 
 void initializeGame() {
 	// Setting up the board.
-	for(int row = 0; row < 2 * ROW_SIZE - 1; row++) {
-		for(int col = 0; col < 2 * COL_SIZE - 1; col++) {
+	for(int row = 0; row < ROW_SIZE; row++) {
+		for(int col = 0; col < COL_SIZE; col++) {
 			board[row][col] = 0;
 		}
 	}
@@ -16,4 +16,7 @@ void initializeGame() {
 
 	// Player 1 starts.
 	cur_player = 1;
+
+	// Number of boxes  = 0
+	no_boxes = 0;
 }

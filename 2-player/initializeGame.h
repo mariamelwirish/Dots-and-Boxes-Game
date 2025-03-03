@@ -7,6 +7,7 @@
 int cur_player;
 int board[ROW_SIZE][COL_SIZE];
 int scores[2];
+int no_boxes = 0;
 
 void initializeGame(void);
 
