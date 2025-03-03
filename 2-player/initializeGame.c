@@ -15,8 +15,8 @@ void initializeGame() {
 	scores[1] = 0;
 
 	// Player 1 starts.
-	cur_player = 1;
+	cur_player = 0;
 
-	// Number of boxes  = 0
+	// Number of boxes = 0
 	no_boxes = 0;
 }
