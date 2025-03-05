@@ -5,7 +5,7 @@
 #define COL_SIZE 6
 
 int cur_player;
-int board[ROW_SIZE][COL_SIZE];
+char board[2* ROW_SIZE - 1][2 * COL_SIZE - 1];
 int scores[2];
 int no_boxes = 0;
 
