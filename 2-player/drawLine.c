@@ -1,5 +1,5 @@
 #include "initializeGame.h"
-#include "helpers.c"
+#include "drawLine.h"
 
 int drawLine(int r1, int c1, int r2, int c2) {
 	// To draw horizontal line "-"
