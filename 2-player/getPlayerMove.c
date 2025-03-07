@@ -33,7 +33,6 @@ void getPlayerMove(int *r1, int *c1, int *r2, int *c2) {
             printf("Line already drawn. Please choose a different move.\n");
             continue;
         }
-		while (getchar() != '\n');
         break;
     }
 
