@@ -1,3 +1,5 @@
+#include "helpers.h"
+
 // Returns 1 if fixed row, 2 if fixed column, 0 if no fixed
 int fixedRow(int r1, int c1, int r2, int c2) {
 	if(r1 == r2) return 1;

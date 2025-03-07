@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "initializeGame.h"
+#include "displayBoard.h"
 
 void displayBoard() {
 	// Printing the numbers on the top (0 - 5)
