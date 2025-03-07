@@ -1,5 +1,6 @@
 #include "getPlayerMove.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 void getPlayerMove(int *r1, int *c1, int *r2, int *c2) {
     while (1) {
@@ -31,7 +32,7 @@ void getPlayerMove(int *r1, int *c1, int *r2, int *c2) {
             printf("Line already drawn. Please choose a different move.\n");
             continue;
         }
-       
+		while (getchar() != '\n');
         break;
     }
 
