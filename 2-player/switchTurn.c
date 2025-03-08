@@ -1,5 +1,5 @@
 #include "switchTurn.h"
 
-void switchTurn(){
+void switchTurn() {
     cur_player = !cur_player;
 }
