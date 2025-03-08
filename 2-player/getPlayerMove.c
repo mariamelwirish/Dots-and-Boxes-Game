@@ -4,7 +4,6 @@
 
 void getPlayerMove(int *r1, int *c1, int *r2, int *c2) {
     while (1) {
-        printf("Enter your move (row1 col1 row2 col2): ");
         if (scanf("%d %d %d %d", r1, c1, r2, c2) != 4) {
             printf("Invalid input. Please enter four integers.\n");
 			while (getchar() != '\n');

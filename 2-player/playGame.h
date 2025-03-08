@@ -16,6 +16,9 @@
 #include "helpers.h"
 #include "helpers.c"
 
+#include "checkBox.h"
+#include "checkBox.c"
+
 void playGame(void);
 
 #endif
