@@ -1,12 +1,15 @@
 #include "boardFunctions.h"
 
+// helper function that will be used to determine if the line is "-" or "|"
 int fixedRow(int r1, int c1, int r2, int c2) {
     if(r1 == r2) return 1;
     else if(c1 == c2) return 2;
     else return 0;
 }
 
+// function to draw line
 int drawLine(int r1, int c1, int r2, int c2) {
+	// draw "-"
     if(fixedRow(r1, c1, r2, c2) == 1) {
         int row = 2 * r1;
         int col = c1 + c2;
@@ -16,7 +19,10 @@ int drawLine(int r1, int c1, int r2, int c2) {
         } else {
             return 0;
         }
-    } else if(fixedRow(r1, c1, r2, c2) == 2) {
+    } 
+
+	// draw "|"
+	else if(fixedRow(r1, c1, r2, c2) == 2) {
         int row = r1 + r2;
         int col = 2 * c1;
         if(board[row][col] == ' ') {
@@ -26,6 +32,7 @@ int drawLine(int r1, int c1, int r2, int c2) {
             return 0;
         }
     }
+
     return 0;
 }
 
@@ -56,7 +63,7 @@ void displayBoard() {
 	}
 }
 
-
+// helper function to check if there is a box on the right of the drawn line
 int isBoxRight(int row, int col) {
 	if(board[row - 1][col + 1] == ' ' || board[row + 1][col + 1] == ' ' || board[row][col + 2] == ' ')
 		return 0;
@@ -67,6 +74,7 @@ int isBoxRight(int row, int col) {
 	}
 }
 
+// helper function to check if there is a box on the left of the drawn line
 int isBoxLeft(int row, int col) {
 	if(board[row - 1][col - 1] == ' ' || board[row + 1][col - 1] == ' ' || board[row][col - 2] == ' ')
 		return 0;
@@ -77,6 +85,7 @@ int isBoxLeft(int row, int col) {
 	}
 }
 
+// helper function to check if there is a box above the drawn line
 int isBoxUp(int row, int col) {
 	if(board[row - 1][col + 1] == ' ' || board[row - 1][col - 1] == ' ' || board[row - 2][col] == ' ')
 		return 0;
@@ -87,6 +96,7 @@ int isBoxUp(int row, int col) {
 	}
 }
 
+// helper function to check if there is a box below the drawn line
 int isBoxDown(int row, int col) {
 	if(board[row + 1][col + 1] == ' ' || board[row + 1][col - 1] == ' ' || board[row + 2][col] == ' ')
 		return 0;
@@ -114,12 +124,10 @@ int isEdge(int row, int col) {
 	else return 0;
 }
 
-
-
-
 int checkBox(int r1, int c1, int r2, int c2) {
-  
-    bool flag = (fixedRow(r1, c1, r2, c2) == 1 ? true : false);  	
+	// determine if it is "-" or "|"
+    bool flag = (fixedRow(r1, c1, r2, c2) == 1 ? true : false); 
+	// calculting the row and col on the board (based on if it is "-" or "|") 	
 	int row = (flag ? 2 * r1 : r1 + r2);
 	int col = (flag ? c1 + c2 : 2 * c1);
 	int edge = isEdge(row, col);

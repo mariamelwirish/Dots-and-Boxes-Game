@@ -10,5 +10,6 @@ int score_a, score_b;
 int no_boxes;
 
 void initializeGame(void);
+void playGame(void);
 
 #endif
