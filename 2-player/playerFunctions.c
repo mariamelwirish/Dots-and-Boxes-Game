@@ -34,14 +34,17 @@ void getPlayerMove(int *r1, int *c1, int *r2, int *c2) {
     }
 }
 
+// checks if all boxes are drawn (i.e. if game is over)
 int isGameOver() {
     return (no_boxes == 20 ? 1 : 0);
 }
 
+// switch turn when needed
 void switchTurn() {
     cur_player = !cur_player;
 }
 
+// calculate the scores each time a line is drawn
 void calculateScores(int r1, int c1, int r2, int c2) {
     if(checkBox(r1, c1, r2, c2) == 1) {
         score_a += (cur_player == 0 ? 1 : 0);

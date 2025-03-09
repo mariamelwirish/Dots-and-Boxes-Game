@@ -24,6 +24,7 @@ void initializeGame() {
 	no_boxes = 0;
 }
 
+// the main function to run the game - called in main.c
 void playGame() {
 	initializeGame();
 	do { 
