@@ -25,7 +25,7 @@ void initializeGame() {
 }
 
 // the main function to run the game - called in main.c
-void playGame() {
+void twoPlayer() {
 	initializeGame();
 	do { 
 		displayBoard();

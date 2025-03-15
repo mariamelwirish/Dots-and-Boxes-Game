@@ -4,5 +4,7 @@
 
 // main function calls playGame
 int main() {
-	playGame();
+	// Ask user to select mode and handle it.
+	twoPlayer();
+	
 }
