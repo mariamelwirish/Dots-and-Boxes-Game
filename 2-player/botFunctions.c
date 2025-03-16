@@ -5,9 +5,9 @@ void generateMove(int *r1, int *c1, int *r2, int *c2) {
 		int flag = rand() % 2; // random flag to select whether to draw horizontal (flag = 0) or vertical line (flag = 1)
 		// if the line is "-". i.e. row is fixed
 		if(flag == 0) {
-			*r1 = rand() % ROW_SIZE;  // generate random row
+			*r1 = rand() % ROW_SIZE;  // generate random row within range [0, ROW_SIZE - 1]
 			*r2 = *r1; 
-			*c1 = rand() % COL_SIZE; // generate random column
+			*c1 = rand() % COL_SIZE; // generate random column [0, COL_SIZE - 1]
 			int flagMove; // flag to decide whether to go right (flag = 0) or left (flag = 1)
 			if(*c1 == 0) flagMove = 0; // if we are on the left edge, hard code the flag to go to right
 			else if(*c1 == COL_SIZE - 1) flagMove = 1; // same with right edge
