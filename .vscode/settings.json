@@ -1,0 +1,13 @@
+{
+	"files.associations": {
+		"initializegame.h": "c",
+		"stdio.h": "c",
+		"drawline.h": "c",
+		"helpers.h": "c",
+		"isgameover.c": "cpp",
+		"switchturn.c": "cpp",
+		"calculatescores.c": "cpp",
+		"boardfunctions.h": "c",
+		"driverfunctions.h": "c"
+	}
+}
