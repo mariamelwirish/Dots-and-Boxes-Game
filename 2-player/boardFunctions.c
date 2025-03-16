@@ -141,9 +141,17 @@ int checkBox(int r1, int c1, int r2, int c2) {
 		else if (edge == 4)
 			return isBoxRight(row, col);
    }
-	else if(flag)
-		return (isBoxUp(row, col) || isBoxDown(row, col));
-	else 
-		return (isBoxRight(row, col) || isBoxLeft(row, col));
+	else if(flag) {
+		bool up = isBoxUp(row, col);
+		bool down = isBoxDown(row, col);
+		if(up && down) return 2;
+		else return (up || down);
+	}
+	else {
+		bool right = isBoxRight(row, col);
+		bool left = isBoxLeft(row, col);
+		if(right && left) return 2;
+		else return (right || left);
+	}
 }	
 

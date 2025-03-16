@@ -46,9 +46,10 @@ void switchTurn() {
 
 // calculate the scores each time a line is drawn
 void calculateScores(int r1, int c1, int r2, int c2) {
-    if(checkBox(r1, c1, r2, c2) == 1) {
-        score_a += (cur_player == 0 ? 1 : 0);
-		score_b += (cur_player == 1 ? 1 : 0);
+	int result = checkBox(r1, c1, r2, c2);
+    if(result != 0) {
+        score_a += (cur_player == 0 ? result : 0);
+		score_b += (cur_player == 1 ? result : 0);
     }
     else {
         switchTurn();
