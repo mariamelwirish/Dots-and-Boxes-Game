@@ -13,6 +13,6 @@ int no_boxes;
 
 void initializeGame(void);
 void twoPlayer(void);
-void easyMode(void)
+void easyMode(void);
 
 #endif
