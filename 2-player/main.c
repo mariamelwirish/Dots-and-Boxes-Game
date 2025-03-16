@@ -7,6 +7,5 @@
 int main() {
 	srand((unsigned int) time(NULL)); 
 	// Ask user to select mode and handle it.
-	twoPlayer();
-	
+	displayBoard();
 }
