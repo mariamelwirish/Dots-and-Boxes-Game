@@ -55,3 +55,16 @@ void calculateScores(int r1, int c1, int r2, int c2) {
         switchTurn();
     }
 }
+
+// announce the winner
+void announceWinner() {
+    if(score_a > score_b) {
+        printf("Player A wins!\n");
+    }
+    else if(score_b > score_a) {
+        printf("Player B wins!\n");
+    }
+    else {
+        printf("It's a tie!\n");
+    }
+}
