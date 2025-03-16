@@ -5,6 +5,7 @@
 
 // main function calls playGame
 int main() {
+	initializeGame();
 	srand((unsigned int) time(NULL)); 
 	// Ask user to select mode and handle it.
 	int choice;
