@@ -30,7 +30,38 @@ void generateEasyMove(int *r1, int *c1, int *r2, int *c2) {
 
 // Helper function for medium mode to generate random move on a box with 0 or 1 edges.
 void drawRandomLine(int *r1, int *c1, int *r2, int *c2, int row, int col) {
+	int flag = rand() % 2; // choose random edge -> flag = 0 means '-' & flag = 1 = means '|'.
+	if(flag == 0) { // '-'
+		int flag_row; // choose direction -> 0 = down, 1 = up
+		if(board[row + 1][col] != ' ') // down is taken. forced to draw up.
+			flag_row = 1;
+		else if(board[row - 1][col] != ' ') // up is taken. forced to draw down
+			flag_row = 0;
+		else // if both available, decide randomly
+			flag_row = rand() % 2;
+		if(flag_row == 0) *r1 = (row + 1) / 2;
+		else *r1 = (row - 1) / 2;
+		*r2 = *r1;
+		*c1 = (col - 1) / 2;
+		*c2 = (col + 1) / 2;
+	}
 	
+	else if(flag == 1) { // '|'
+		int flag_col = -1; // 0 = right, 1 = left
+		if(board[row + 1][col] != ' ') // right is taken. forced to draw left.
+			flag_col = 1;
+		else if(board[row - 1][col] != ' ') // left is taken. forced to draw right.
+			flag_col = 0;
+		else
+			flag_col = rand() % 2;
+		if(flag_col == 0) *c1 = (col + 1) / 2;
+		else *c1 = (col - 1) / 2;
+		*c2 = *c1;
+		*r1 = (row - 1) / 2;
+		*r2 = (row + 1) / 2;
+	}
+	
+	drawLine(*r1, *c1, *r2, *c2);
 }
 
 // Helper function to count the edges on a box.
