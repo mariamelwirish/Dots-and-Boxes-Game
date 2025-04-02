@@ -7,8 +7,8 @@
 #include "boardFunctions.h"
 
 void generateEasyMove(int *r1, int *c1, int *r2, int *c2);
-void drawRandomLine(int *row, int *col);
-int countEdges(int *row, int *col);
+void drawRandomLine(int row, int col);
+int countEdges(int row, int col);
 void generateMediumMove(int *r1, int *c1, int *r2, int *c2);
 
 #endif

@@ -29,15 +29,21 @@ void generateEasyMove(int *r1, int *c1, int *r2, int *c2) {
 }
 
 // Helper function for medium mode to generate random move on a box with 0 or 1 edges.
-void drawRandomLin(int *row, int *col) {
+void drawRandomLine(int row, int col) {
 
 }
 
 // Helper function to count the edges on a box.
-int countEdges(int *row, int *col) {
+int countEdges(int row, int col) {
 
 }
 
 void generateMediumMove(int *r1, int *c1, int *r2, int *c2) {
-
+	for(int row = 1; row < 2 * ROW_SIZE - 2; row += 2) {
+		for(int col = 1; col < 2 * COL_SIZE - 2; col += 2) {
+			if(board[row][col] == ' ') {
+				int count = countEdges(row, col);
+			}
+		} 
+	}
 }
