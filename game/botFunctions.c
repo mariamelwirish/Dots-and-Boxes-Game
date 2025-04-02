@@ -92,19 +92,19 @@ void generateMediumMove(int *r1, int *c1, int *r2, int *c2) {
                         *c1 = (col - 1) / 2;
                         *c2 = (col + 1) / 2;
                         drawLine(*r1, *c1, *r2, *c2);
-                    } else if (board[row - 1][col] == ' ') { // Bottom side missing
+                    } else if (board[row - 1][col] == ' ') { // Bottom edge missing
                         *r1 = (row - 1) / 2;
                         *r2 = (row - 1) / 2;
                         *c1 = (col - 1) / 2;
                         *c2 = (col + 1) / 2;
                         drawLine(*r1, *c1, *r2, *c2);
-                    } else if (board[row][col + 1] == ' ') { // Left side missing
+                    } else if (board[row][col + 1] == ' ') { // Left edge missing
                         *r1 = (row - 1) / 2;
                         *r2 = (row + 1) / 2;
                         *c1 = (col + 1) / 2;
                         *c2 = (col + 1) / 2;
                         drawLine(*r1, *c1, *r2, *c2);
-                    } else if (board[row][col - 1] == ' ') { // Right side missing
+                    } else if (board[row][col - 1] == ' ') { // Right edge missing
                         *r1 = (row - 1) / 2;
                         *r2 = (row + 1) / 2;
                         *c1 = (col - 1) / 2;
