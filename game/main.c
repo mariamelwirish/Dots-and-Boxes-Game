@@ -22,7 +22,7 @@ int main() {
 		printf("Invalid input. Please enter 1 or 2.\n");
 		while (getchar() != '\n');
 	}
-	
+	printf("******************************************************************************\n");
 	if (choice == 1) {
 		twoPlayer();
 	} else {
@@ -31,12 +31,14 @@ int main() {
 			printf("Select bot mode:\n");
 			printf("1. Easy Mode.\n");
 			printf("2. Medium Mode.\n");
+			printf("Enter your choice (1 or 2): ");
 			if (scanf("%d", &mode) == 1 && (mode == 1 || mode == 2)) {
 				break;
 			}
 			printf("Invalid input. Please enter 1 or 2.\n");
 			while (getchar() != '\n');
 		}
+		printf("******************************************************************************\n");
 		if(mode == 1)
 			easyMode();
 		else if(mode == 2) 

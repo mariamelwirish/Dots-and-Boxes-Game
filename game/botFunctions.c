@@ -29,7 +29,7 @@ void generateEasyMove(int *r1, int *c1, int *r2, int *c2) {
 }
 
 // Helper function for medium mode to generate random move on a box with 0 or 1 edges.
-void drawRandomLine(int row, int col) {
+void drawRandomLine(int *r1, int *c1, int *r2, int *c2, int row, int col) {
 	
 }
 
@@ -39,48 +39,52 @@ int countEdges(int row, int col) {
 }
 
 void generateMediumMove(int *r1, int *c1, int *r2, int *c2) {
+	// alt_row & alt_col if in case there are no winning moves, we choose boxes with 0 or 1 edges.
     int alt_row = -1, alt_col = -1;
-
     for (int row = 1; row < 2 * ROW_SIZE - 1; row += 2) {
         for (int col = 1; col < 2 * COL_SIZE - 1; col += 2) {
+			// if the box is not closed yet.
             if (board[row][col] == ' ') {
+				// count the edges of the box.
                 int count = countEdges(row, col);
+				// There is a winning move!
                 if (count == 3) {
-                    if (board[row + 1][col] == ' ') { // Top side missing
+					// need to decide which edge is missing.
+                    if (board[row + 1][col] == ' ') { // Top edge missing
                         *r1 = (row + 1) / 2;
                         *r2 = (row + 1) / 2;
                         *c1 = (col - 1) / 2;
                         *c2 = (col + 1) / 2;
                         drawLine(*r1, *c1, *r2, *c2);
-                        return;
                     } else if (board[row - 1][col] == ' ') { // Bottom side missing
                         *r1 = (row - 1) / 2;
                         *r2 = (row - 1) / 2;
                         *c1 = (col - 1) / 2;
                         *c2 = (col + 1) / 2;
                         drawLine(*r1, *c1, *r2, *c2);
-                        return;
                     } else if (board[row][col + 1] == ' ') { // Left side missing
                         *r1 = (row - 1) / 2;
                         *r2 = (row + 1) / 2;
                         *c1 = (col + 1) / 2;
                         *c2 = (col + 1) / 2;
                         drawLine(*r1, *c1, *r2, *c2);
-                        return;
                     } else if (board[row][col - 1] == ' ') { // Right side missing
                         *r1 = (row - 1) / 2;
                         *r2 = (row + 1) / 2;
                         *c1 = (col - 1) / 2;
                         *c2 = (col - 1) / 2;
                         drawLine(*r1, *c1, *r2, *c2);
-                        return;
                     }
+					return;
                 }
-                else if (alt_row == -1 && alt_col == -1 && count == 0) {
+				// No winning moves. At least don't help the opponent!
+				// Priotrize boxes with 0 edges (less risky).
+                else if (count == 0) {
                     alt_row = row;
 					alt_col = col;
                 }
-				else if (alt_row == -1 && alt_col == -1 && count == 0) {
+				// No boxes with 0 edges found? Second priority: boxes with 1 edge.
+				else if (alt_row == -1 && alt_col == -1 && count == 1) {
                     alt_row = row;
 					alt_col = col;
                 }
@@ -88,10 +92,12 @@ void generateMediumMove(int *r1, int *c1, int *r2, int *c2) {
         }
     }
 
+	// If there is no winning move and there are boxes with 0 or 1 edges.
     if (alt_row != -1) {
-       drawRandomLine(alt_row, alt_col);
+       drawRandomLine(r1, c1, r2, c2, alt_row, alt_col);
 		return;
     }
 
+	// If all the options are either boxes with 2 edges or closed boxes. Doesn't matter; play random move.
     generateEasyMove(r1, c1, r2, c2);
 }
