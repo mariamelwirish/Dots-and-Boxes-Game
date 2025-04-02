@@ -1,6 +1,6 @@
 #include "botFunctions.h"
 
-void generateMove(int *r1, int *c1, int *r2, int *c2) {
+void generateEasyMove(int *r1, int *c1, int *r2, int *c2) {
 	do {
 		int flag = rand() % 2; // random flag to select whether to draw horizontal (flag = 0) or vertical line (flag = 1)
 		// if the line is "-". i.e. row is fixed
@@ -26,4 +26,18 @@ void generateMove(int *r1, int *c1, int *r2, int *c2) {
 			*r2 = (flagMove == 0 ? *r1 + 1 : *r1 - 1);
 		}
 	} while(drawLine(*r1, *c1, *r2, *c2) == 0); // to ensure that the line is not already drawn
+}
+
+// Helper function for medium mode to generate random move on a box with 0 or 1 edges.
+void drawRandomEdge(int *row, int *col) {
+
+}
+
+// Helper function to count the edges on a box.
+int countEdges(int *row, int *col) {
+
+}
+
+void generateMediumMove(int *r1, int *c1, int *r2, int *c2) {
+
 }
