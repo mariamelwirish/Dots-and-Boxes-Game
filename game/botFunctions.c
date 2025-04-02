@@ -66,7 +66,12 @@ void drawRandomLine(int *r1, int *c1, int *r2, int *c2, int row, int col) {
 
 // Helper function to count the edges on a box.
 int countEdges(int row, int col) {
-	
+	int count = 0;
+	count += (board[row + 1][col] != ' ' ? 1 : 0);
+	count += (board[row - 1][col] != ' ' ? 1 : 0);
+	count += (board[row][col + 1] != ' ' ? 1 : 0);
+	count += (board[row][col - 1] != ' ' ? 1 : 0);
+	return count;
 }
 
 void generateMediumMove(int *r1, int *c1, int *r2, int *c2) {
