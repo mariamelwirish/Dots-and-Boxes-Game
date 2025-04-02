@@ -29,7 +29,7 @@ void generateEasyMove(int *r1, int *c1, int *r2, int *c2) {
 }
 
 // Helper function for medium mode to generate random move on a box with 0 or 1 edges.
-void drawRandomEdge(int *row, int *col) {
+void drawRandomLin(int *row, int *col) {
 
 }
 
