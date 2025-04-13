@@ -4,6 +4,7 @@
 
 #define	ROW_SIZE 5
 #define COL_SIZE 6
+#define BOXES (ROW_SIZE * COL_SIZE)
 #include "botFunctions.h"
 
 int cur_player;
