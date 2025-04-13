@@ -76,7 +76,7 @@ int evaluateBoard() {
 
 }
 
-// minimax Algorithm.
+// minimax Algorithm Body.
 // Need to replace player with struct (later after modification).
 int minimax(int depth, int alpha, int beta, int player) {
 
