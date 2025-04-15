@@ -5,12 +5,8 @@
 #define	ROW_SIZE 5
 #define COL_SIZE 6
 #define BOXES (ROW_SIZE * COL_SIZE)
-#include "botFunctions.h"
+//#include "botFunctions.h"
 
-int cur_player;
-char board[2 * ROW_SIZE - 1][2 * COL_SIZE - 1];
-int score_a, score_b;
-int no_boxes;
 
 typedef struct {
     int score_a;
@@ -20,9 +16,9 @@ typedef struct {
 	char board[2 * ROW_SIZE - 1][2 * COL_SIZE - 1];
 } GameState;
 
-void initializeGame(void);
-void twoPlayer(void);
-void easyMode(void);
-void mediumMode(void);
+void initializeGame(GameState *state);
+void twoPlayer(GameState *state);
+void easyMode(GameState *state);
+void mediumMode(GameState *state);
 
 #endif

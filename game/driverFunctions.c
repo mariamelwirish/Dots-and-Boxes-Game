@@ -1,89 +1,93 @@
-#include "driverFunctions.h"
+#include <stdio.h>             
+#include "driverFunctions.h"  
+#include "playerFunctions.h"   
+#include "botFunctions.h"      
+#include "boardFunctions.h" 
 
-void initializeGame() {
+void initializeGame(GameState *state) {
 	// Setting up the board.
 	for(int row = 0; row <= 2 * (ROW_SIZE - 1); row++) {
 		for(int col = 0; col <= 2 * (COL_SIZE - 1); col++) {
 			if(row % 2 == 0 && col % 2 == 0) 
-				board[row][col] = '.';
+				state->board[row][col] = '.';
 			else if(row % 2 == 0 && col % 2 == 1)
-				board[row][col] = ' ';
+				state->board[row][col] = ' ';
 			else
-				board[row][col] = ' ';
+				state->board[row][col] = ' ';
 		}
 	}
 
 	// Setting scores to 0.
-	score_a = 0;
-	score_b = 0;
+	state->score_a = 0;
+	state->score_b = 0;
 
 	// Player 1 starts.
-	cur_player = 0;
+	state->cur_player = 0;
 
 	// Number of boxes = 0
-	no_boxes = 0;
+	state->no_boxes = 0;
 }
 
 // the main function to run the game - called in main.c
-void twoPlayer() {
+void twoPlayer(GameState *state) {
 	
 	do { 
-		displayBoard();
-		printf("Player %c's turn. Enter the row and column of the first dot (e.g., A0 -> 0 0) and second dot: \n", (cur_player == 0 ? 'A' : 'B'));
+		displayBoard(state);
+		printf("Player %c's turn. Enter the row and column of the first dot (e.g., A0 -> 0 0) and second dot: \n", (state->cur_player == 0 ? 'A' : 'B'));
 		int r1, c1, r2, c2;
 		getPlayerMove(&r1, &c1, &r2, &c2);
-		calculateScores(r1, c1, r2, c2);
+		calculateScores(state, r1, c1, r2, c2);
 		printf("******************************************************************************\n");
-		printf("Player A score: %d\n", score_a);
-		printf("Player B score: %d\n", score_b);
+		printf("Player A score: %d\n", state->score_a);
+		printf("Player B score: %d\n", state->score_b);
 		printf("******************************************************************************\n");
-	} while (!isGameOver());
+	} while (!isGameOver(state));
 	
 }
 
-void easyMode() {
-    while (!isGameOver()) {
+void easyMode(GameState *state) {
+    while (!isGameOver(state)) {
         int r1, c1, r2, c2;
-        if (cur_player == 0) {    // cur player = 0 means the player is a human
+        if (state->cur_player == 0) {    // cur player = 0 means the player is a human
             // Human turn: display board and prompt for input.
-            displayBoard();
+            displayBoard(state);
             printf("Player A's turn. Enter your move (row1 col1 row2 col2): ");
             
             getPlayerMove(&r1, &c1, &r2, &c2);
            
         } else {
             // Bot turn: do not display the board; instead, show bot's chosen move.
-            generateEasyMove(&r1, &c1, &r2, &c2);
+            generateEasyMove(state, &r1, &c1, &r2, &c2);
             printf("Bot chose move: (%d, %d) to (%d, %d)\n", r1, c1, r2, c2);
             
         }
-        calculateScores(r1, c1, r2, c2);
+        calculateScores(state, r1, c1, r2, c2);
 		printf("******************************************************************************\n");
-		printf("Player A score: %d\n", score_a);
-		printf("Player B score: %d\n", score_b);
+		printf("Player A score: %d\n", state->score_a);
+		printf("Player B score: %d\n", state->score_b);
 		printf("******************************************************************************\n");
     }
-}
+	
 
-void mediumMode() {
-	while (!isGameOver()) {
+void mediumMode(GameState *state) {
+	while (!isGameOver(state)) {
         int r1, c1, r2, c2;
-        if (cur_player == 0) {    // cur player = 0 means the player is a human
+        if (state->cur_player == 0) {    // cur player = 0 means the player is a human
             // Human turn: display board and prompt for input.
-            displayBoard();
+            displayBoard(state);
             printf("Player A's turn. Enter your move (row1 col1 row2 col2): ");
             getPlayerMove(&r1, &c1, &r2, &c2);
            
         } else {
             // Bot turn: do not display the board; instead, show bot's chosen move.
-            generateMediumMove(&r1, &c1, &r2, &c2);
+            generateMediumMove(state, &r1, &c1, &r2, &c2);
             printf("Bot chose move: (%d, %d) to (%d, %d)\n", r1, c1, r2, c2);
             
         }
-        calculateScores(r1, c1, r2, c2);
+        calculateScores(state, r1, c1, r2, c2);
 		printf("******************************************************************************\n");
-		printf("Player A score: %d\n", score_a);
-		printf("Player B score: %d\n", score_b);
+		printf("Player A score: %d\n", state->score_a);
+		printf("Player B score: %d\n", state->score_b);
 		printf("******************************************************************************\n");
     }
 }
