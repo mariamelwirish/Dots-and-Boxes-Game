@@ -86,13 +86,13 @@ int evaluateBoard(GameState *state) {
 }
 
 // minimax Algorithm Body.
-// Need to replace player with struct (later after modification).
-int minimax(GameState *state, int depth, bool isBot, int alpha, int beta) {
+int minimax(GameState *state, int depth, bool bot, int alpha, int beta) {
+	// In case recursion is finished OR the game has ended!
     if (depth == 0 || state->no_boxes == (ROW_SIZE - 1) * (COL_SIZE - 1)) {
         return evaluateBoard(state);
     }
 
-    int bestScore = (isBot ? INT_MIN : INT_MAX);
+    int best_score = (bot ? INT_MIN : INT_MAX);
 
     for (int row = 0; row <= 2 * (ROW_SIZE - 1); row++) {
         for (int col = 0; col <= 2 * (COL_SIZE - 1); col++) {
@@ -108,30 +108,30 @@ int minimax(GameState *state, int depth, bool isBot, int alpha, int beta) {
                 r2 = r1 + 1;
             } else continue;
 
+			// Create a copy of the current board.
             GameState newState = *state;
 
             if (!drawLine(&newState, r1, c1, r2, c2)) continue;
 
             calculateScores(&newState, r1, c1, r2, c2);
 
-            int nextIsBot = (newState.cur_player == 1);
-            int result = minimax(&newState, depth - 1, nextIsBot, alpha, beta);
+            bool is_bot = (newState.cur_player == 1);
+            int result = minimax(&newState, depth - 1, is_bot, alpha, beta);
 
-			// Need to check.
-            if (isBot) {
-                if (result > bestScore) bestScore = result;
-                if (result > alpha) alpha = result;
+            if (bot) {
+				best_score = max(best_score, result);
+				alpha = max(alpha, result);
             } else {
-                if (result < bestScore) bestScore = result;
-                if (result < beta) beta = result;
+				best_score = min(best_score, result);
+				beta = min(beta, result);
             }
 
             if (beta <= alpha)
-                return bestScore;  // prune
+                return best_score;  // prune
         }
     }
 
-    return bestScore;
+    return best_score;
 }
 
 
