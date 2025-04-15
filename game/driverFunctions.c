@@ -35,7 +35,7 @@ void twoPlayer(GameState *state) {
 		displayBoard(state);
 		printf("Player %c's turn. Enter the row and column of the first dot (e.g., A0 -> 0 0) and second dot: \n", (state->cur_player == 0 ? 'A' : 'B'));
 		int r1, c1, r2, c2;
-		getPlayerMove(&r1, &c1, &r2, &c2);
+		getPlayerMove(state, &r1, &c1, &r2, &c2);
 		calculateScores(state, r1, c1, r2, c2);
 		printf("******************************************************************************\n");
 		printf("Player A score: %d\n", state->score_a);
@@ -53,7 +53,7 @@ void easyMode(GameState *state) {
             displayBoard(state);
             printf("Player A's turn. Enter your move (row1 col1 row2 col2): ");
             
-            getPlayerMove(&r1, &c1, &r2, &c2);
+            getPlayerMove(state, &r1, &c1, &r2, &c2);
            
         } else {
             // Bot turn: do not display the board; instead, show bot's chosen move.
@@ -67,6 +67,7 @@ void easyMode(GameState *state) {
 		printf("Player B score: %d\n", state->score_b);
 		printf("******************************************************************************\n");
     }
+}
 	
 
 void mediumMode(GameState *state) {
@@ -76,7 +77,7 @@ void mediumMode(GameState *state) {
             // Human turn: display board and prompt for input.
             displayBoard(state);
             printf("Player A's turn. Enter your move (row1 col1 row2 col2): ");
-            getPlayerMove(&r1, &c1, &r2, &c2);
+            getPlayerMove(state, &r1, &c1, &r2, &c2);
            
         } else {
             // Bot turn: do not display the board; instead, show bot's chosen move.

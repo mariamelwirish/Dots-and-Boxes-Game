@@ -5,9 +5,9 @@
 #include <stdlib.h>
 #include "boardFunctions.h"
 
-void getPlayerMove(int *r1, int *c1, int *r2, int *c2);
-int isGameOver();
-void switchTurn();
-void calculateScores(int r1, int c1, int r2, int c2);
+void getPlayerMove(GameState *state, int *r1, int *c1, int *r2, int *c2);
+int isGameOver(GameState* state);
+void switchTurn(GameState* state);
+void calculateScores(GameState* state, int r1, int c1, int r2, int c2);
 
 #endif
