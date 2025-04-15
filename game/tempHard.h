@@ -1,18 +1,22 @@
 #ifndef TEMP_HARD_H
 #define TEMP_HARD_H
 
+#include <limits.h>
 #include "botFunctions.h"
 #include "boardFunctions.h"
 #include "driverFunctions.h"
+#include "playerFunctions.h"
 
-int boxes[] = {20, 0, 0, 0};
+extern int boxes[];
+
 typedef enum {OPENING, MIDGAME, ENDGAME} GamePhase;
-//GamePhase getGamePhase(void);
-GamePhase getGamePhase(GameState *state);
-void generateSafeMove(GameState *state, int *r1, int *c1, int *r2, int *c2);
-int evaluateBoard(void);
-int minimax(int depth, int alpha, int beta, int player);
-void generateMinimaxMove(int *r1, int *c1, int *r2, int *c2);
-void generateParityChainMove(int *r1, int *c1, int *r2, int *c2);
+
+GamePhase getGamePhase(GameState* state);
+void generateSafeMove(GameState* state, int *r1, int *c1, int *r2, int *c2);
+int evaluateBoard(GameState *state);
+int minimax(GameState *state, int depth, bool isBot, int alpha, int beta);
+void generateMinimaxMove(GameState *state, int *r1, int *c1, int *r2, int *c2);
+void generateParityChainMove(GameState *state, int *r1, int *c1, int *r2, int *c2);
 void generateHardMove(GameState *state, int *r1, int *c1, int *r2, int *c2);
+
 #endif

@@ -3,9 +3,11 @@
 #include "driverFunctions.c"
 #include "botFunctions.c"
 
+
 // main function calls playGame
 int main() {
-	initializeGame();
+	GameState *state = (GameState *) malloc(sizeof(GameState)); 
+	initializeGame(state);
 	srand((unsigned int) time(NULL)); 
 	// Ask user to select mode and handle it.
 	int choice;
@@ -24,7 +26,7 @@ int main() {
 	}
 	printf("******************************************************************************\n");
 	if (choice == 1) {
-		twoPlayer();
+		twoPlayer(state);
 	} else {
 		int mode;
 		while(true) {
@@ -40,10 +42,10 @@ int main() {
 		}
 		printf("******************************************************************************\n");
 		if(mode == 1)
-			easyMode();
+			easyMode(state);
 		else if(mode == 2) 
-			mediumMode();
+			mediumMode(state);
 	}
-	displayBoard();
-	announceWinner();
+	displayBoard(state);
+	announceWinner(state);
 }

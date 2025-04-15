@@ -1,7 +1,7 @@
 #include "boardFunctions.h"
 
 // helper function that will be used to determine if the line is "-" or "|"
-int fixedRow(int r1, int c1, int r2, int c2) {
+int fixedRow(GameState *state, int r1, int c1, int r2, int c2) {
     if(r1 == r2) return 1;
     else if(c1 == c2) return 2;
     else return 0;
@@ -10,7 +10,7 @@ int fixedRow(int r1, int c1, int r2, int c2) {
 // function to draw line
 int drawLine(GameState *state, int r1, int c1, int r2, int c2) {
 	// draw "-"
-    if(fixedRow(r1, c1, r2, c2) == 1) {
+    if(fixedRow(state, r1, c1, r2, c2) == 1) {
         int row = 2 * r1;
         int col = c1 + c2;
         if(state->board[row][col] == ' ') {
@@ -22,7 +22,7 @@ int drawLine(GameState *state, int r1, int c1, int r2, int c2) {
     } 
 
 	// draw "|"
-	else if(fixedRow(r1, c1, r2, c2) == 2) {
+	else if(fixedRow(state, r1, c1, r2, c2) == 2) {
         int row = r1 + r2;
         int col = 2 * c1;
         if(state->board[row][col] == ' ') {
@@ -108,7 +108,7 @@ int isBoxDown(GameState *state, int row, int col) {
 }
 
 // This function checks if the box is at the edge of the board
-int isEdge(int row, int col) { 
+int isEdge(GameState *state, int row, int col) { 
     if (row == 0) 
         return 1;
   
@@ -126,11 +126,11 @@ int isEdge(int row, int col) {
 
 int checkBox(GameState *state, int r1, int c1, int r2, int c2) {
 	// determine if it is "-" or "|"
-    bool flag = (fixedRow(r1, c1, r2, c2) == 1 ? true : false); 
+    bool flag = (fixedRow(state, r1, c1, r2, c2) == 1 ? true : false); 
 	// calculting the row and col on the board (based on if it is "-" or "|") 	
 	int row = (flag ? 2 * r1 : r1 + r2);
 	int col = (flag ? c1 + c2 : 2 * c1);
-	int edge = isEdge(row, col);
+	int edge = isEdge(state, row, col);
 	if(edge) {	// checks if it is a line is on the edge
 		if (edge == 1)
 			return isBoxDown(state, row, col);

@@ -1,6 +1,6 @@
 #include "playerFunctions.h"
 
-void getPlayerMove(int *r1, int *c1, int *r2, int *c2) {
+void getPlayerMove(GameState *state, int *r1, int *c1, int *r2, int *c2) {
     while (1) {
         if (scanf("%d %d %d %d", r1, c1, r2, c2) != 4) {
             printf("Invalid input. Please enter four integers.\n");
@@ -25,7 +25,7 @@ void getPlayerMove(int *r1, int *c1, int *r2, int *c2) {
         
         // Edge Case 3: Check if the line is already drawn.
         // Pass the coordinate values to drawLine. If it returns 0, the move is invalid.
-        if (drawLine(*r1, *c1, *r2, *c2) == 0) {
+        if (drawLine(state, *r1, *c1, *r2, *c2) == 0) {
             printf("Line already drawn. Please choose a different move.\n");
             continue;
         }
@@ -35,33 +35,33 @@ void getPlayerMove(int *r1, int *c1, int *r2, int *c2) {
 }
 
 // checks if all boxes are drawn (i.e. if game is over)
-int isGameOver() {
-    return (no_boxes == 20 ? 1 : 0);
+int isGameOver(GameState *state) {
+    return (state->no_boxes == 20 ? 1 : 0);
 }
 
 // switch turn when needed
-void switchTurn() {
-    cur_player = !cur_player;
+void switchTurn(GameState *state) {
+    state->cur_player = !(state->cur_player);
 }
 
 // calculate the scores each time a line is drawn
-void calculateScores(int r1, int c1, int r2, int c2) {
-	int result = checkBox(r1, c1, r2, c2);
+void calculateScores(GameState *state, int r1, int c1, int r2, int c2) {
+	int result = checkBox(state, r1, c1, r2, c2);
     if(result != 0) {
-        score_a += (cur_player == 0 ? result : 0);
-		score_b += (cur_player == 1 ? result : 0);
+        state->score_a += (state->cur_player == 0 ? result : 0);
+		state->score_b += (state->cur_player == 1 ? result : 0);
     }
     else {
-        switchTurn();
+        switchTurn(state);
     }
 }
 
 // announce the winner
-void announceWinner() {
-    if(score_a > score_b) {
+void announceWinner(GameState *state) {
+    if(state->score_a > state->score_b) {
         printf("Player A wins!\n");
     }
-    else if(score_b > score_a) {
+    else if(state->score_b > state->score_a) {
         printf("Player B wins!\n");
     }
     else {

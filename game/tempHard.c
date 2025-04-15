@@ -1,5 +1,7 @@
 #include "tempHard.h"
 
+boxes[] = {20, 0, 0, 0};
+
 // A function to determine the game phase (opening, midgame, endgame) to determine which algorithm to play.
 GamePhase getGamePhase(GameState *state) {
 	if((boxes[0] + boxes[1]) == 0 || state->no_boxes >= 0.8 * BOXES) 
@@ -72,24 +74,75 @@ void generateSafeMove(GameState *state, int *r1, int *c1, int *r2, int *c2) {
 }
 
 // Helper function to evaluate the board for minimax.
-int evaluateBoard() {
-
+int evaluateBoard(GameState *state) {
+// same loop as generateMediumMove
+/*
+ Heuristics:
+ +2 for bot box
+-2 for opponent box
+-1 for 3-edged boxes (danger)
++1 for 1-edged boxes (potential chain)
+*/
 }
 
 // minimax Algorithm Body.
 // Need to replace player with struct (later after modification).
-int minimax(int depth, int alpha, int beta, int player) {
+int minimax(GameState *state, int depth, bool isBot, int alpha, int beta) {
+    if (depth == 0 || state->no_boxes == (ROW_SIZE - 1) * (COL_SIZE - 1)) {
+        return evaluateBoard(state);
+    }
 
+    int bestScore = (isBot ? INT_MIN : INT_MAX);
+
+    for (int row = 0; row <= 2 * (ROW_SIZE - 1); row++) {
+        for (int col = 0; col <= 2 * (COL_SIZE - 1); col++) {
+            if (state->board[row][col] != ' ') continue;
+            int r1, c1, r2, c2;
+            if (row % 2 == 0 && col % 2 == 1) {
+                r1 = r2 = row / 2;
+                c1 = (col - 1) / 2;
+                c2 = c1 + 1;
+            } else if (row % 2 == 1 && col % 2 == 0) {
+                c1 = c2 = col / 2;
+                r1 = (row - 1) / 2;
+                r2 = r1 + 1;
+            } else continue;
+
+            GameState newState = *state;
+
+            if (!drawLine(&newState, r1, c1, r2, c2)) continue;
+
+            calculateScores(&newState, r1, c1, r2, c2);
+
+            int nextIsBot = (newState.cur_player == 1);
+            int result = minimax(&newState, depth - 1, nextIsBot, alpha, beta);
+
+			// Need to check.
+            if (isBot) {
+                if (result > bestScore) bestScore = result;
+                if (result > alpha) alpha = result;
+            } else {
+                if (result < bestScore) bestScore = result;
+                if (result < beta) beta = result;
+            }
+
+            if (beta <= alpha)
+                return bestScore;  // prune
+        }
+    }
+
+    return bestScore;
 }
 
 
+
 // A function for Mid-game.
-void generateMinimaxMove(int *r1, int *c1, int *r2, int *c2) {
+void generateMinimaxMove(GameState *state, int *r1, int *c1, int *r2, int *c2) {
 
 }
 
 // A function for End-game (when all chains are formed).
-void generateParityChainMove(int *r1, int *c1, int *r2, int *c2) {
+void generateParityChainMove(GameState *state, int *r1, int *c1, int *r2, int *c2) {
 
 }
 
@@ -99,8 +152,8 @@ void generateHardMove(GameState *state, int *r1, int *c1, int *r2, int *c2) {
     if (phase == OPENING) {
         generateSafeMove(state, r1, c1, r2, c2);
     } else if (phase == MIDGAME) {
-        generateMinimaxMove(r1, c1, r2, c2); 
+        generateMinimaxMove(state, r1, c1, r2, c2); 
     } else if (phase == ENDGAME) {
-        generateParityChainMove(r1, c1, r2, c2);
+        generateParityChainMove(state, r1, c1, r2, c2);
     }
 }
