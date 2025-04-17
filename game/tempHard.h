@@ -1,6 +1,5 @@
 #ifndef TEMP_HARD_H
 #define TEMP_HARD_H
-#define DEPTH 3 
 
 #include <limits.h>
 #include "botFunctions.h"
