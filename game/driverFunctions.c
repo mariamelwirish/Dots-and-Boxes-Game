@@ -3,6 +3,7 @@
 #include "playerFunctions.h"   
 #include "botFunctions.h"      
 #include "boardFunctions.h" 
+#include "tempHard.h"
 
 void initializeGame(GameState *state) {
 	// Setting up the board.
@@ -82,6 +83,29 @@ void mediumMode(GameState *state) {
         } else {
             // Bot turn: do not display the board; instead, show bot's chosen move.
             generateMediumMove(state, &r1, &c1, &r2, &c2);
+            printf("Bot chose move: (%d, %d) to (%d, %d)\n", r1, c1, r2, c2);
+            
+        }
+        calculateScores(state, r1, c1, r2, c2);
+		printf("******************************************************************************\n");
+		printf("Player A score: %d\n", state->score_a);
+		printf("Player B score: %d\n", state->score_b);
+		printf("******************************************************************************\n");
+    }
+}
+
+void hardMode(GameState *state) {
+	while (!isGameOver(state)) {
+        int r1, c1, r2, c2;
+        if (state->cur_player == 0) {    // cur player = 0 means the player is a human
+            // Human turn: display board and prompt for input.
+            displayBoard(state);
+            printf("Player A's turn. Enter your move (row1 col1 row2 col2): ");
+            getPlayerMove(state, &r1, &c1, &r2, &c2);
+           
+        } else {
+            // Bot turn: do not display the board; instead, show bot's chosen move.
+            generateHardMove(state, &r1, &c1, &r2, &c2);
             printf("Bot chose move: (%d, %d) to (%d, %d)\n", r1, c1, r2, c2);
             
         }

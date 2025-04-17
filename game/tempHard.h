@@ -1,13 +1,15 @@
 #ifndef TEMP_HARD_H
 #define TEMP_HARD_H
 
+#define DEPTH 3
+
 #include <limits.h>
 #include "botFunctions.h"
 #include "boardFunctions.h"
 #include "driverFunctions.h"
 #include "playerFunctions.h"
 
-extern int boxes[];
+
 
 typedef enum {OPENING, MIDGAME, ENDGAME} GamePhase;
 
