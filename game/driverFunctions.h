@@ -20,5 +20,6 @@ void initializeGame(GameState *state);
 void twoPlayer(GameState *state);
 void easyMode(GameState *state);
 void mediumMode(GameState *state);
+void hardMode(GameState *state);
 
 #endif

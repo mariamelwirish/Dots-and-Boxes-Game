@@ -2,6 +2,7 @@
 #include "playerFunctions.c"
 #include "driverFunctions.c"
 #include "botFunctions.c"
+#include "tempHard.c"
 
 
 // main function calls playGame
@@ -33,8 +34,9 @@ int main() {
 			printf("Select bot mode:\n");
 			printf("1. Easy Mode.\n");
 			printf("2. Medium Mode.\n");
-			printf("Enter your choice (1 or 2): ");
-			if (scanf("%d", &mode) == 1 && (mode == 1 || mode == 2)) {
+			printf("3. Hard Mode.\n");
+			printf("Enter your choice (1, 2, or 3): ");
+			if (scanf("%d", &mode) == 1 && (mode == 1 || mode == 2 || mode == 3)) {
 				break;
 			}
 			printf("Invalid input. Please enter 1 or 2.\n");
@@ -45,6 +47,9 @@ int main() {
 			easyMode(state);
 		else if(mode == 2) 
 			mediumMode(state);
+		else if(mode == 3)
+			hardMode(state);
+
 	}
 	displayBoard(state);
 	announceWinner(state);
