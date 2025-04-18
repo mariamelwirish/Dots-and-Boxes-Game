@@ -28,42 +28,6 @@ void generateEasyMove(GameState *state, int *r1, int *c1, int *r2, int *c2) {
 	} while(drawLine(state, *r1, *c1, *r2, *c2) == 0); // to ensure that the line is not already drawn
 }
 
-// Helper function for medium mode to generate random move on a box with 0 or 1 edges.
-void drawRandomLine(GameState *state, int *r1, int *c1, int *r2, int *c2, int row, int col) {
-	int flag = rand() % 2; // choose random edge -> flag = 0 means '-' & flag = 1 = means '|'.
-	if(flag == 0) { // '-'
-		int flag_row; // choose direction -> 0 = down, 1 = up
-		if(state->board[row + 1][col] != ' ') // down is taken. forced to draw up.
-			flag_row = 1;
-		else if(state->board[row - 1][col] != ' ') // up is taken. forced to draw down
-			flag_row = 0;
-		else // if both available, decide randomly
-			flag_row = rand() % 2;
-		if(flag_row == 0) *r1 = (row + 1) / 2;
-		else *r1 = (row - 1) / 2;
-		*r2 = *r1;
-		*c1 = (col - 1) / 2;
-		*c2 = (col + 1) / 2;
-	}
-	
-	else if(flag == 1) { // '|'
-		int flag_col = -1; // 0 = right, 1 = left
-		if(state->board[row + 1][col] != ' ') // right is taken. forced to draw left.
-			flag_col = 1;
-		else if(state->board[row - 1][col] != ' ') // left is taken. forced to draw right.
-			flag_col = 0;
-		else
-			flag_col = rand() % 2;
-		if(flag_col == 0) *c1 = (col + 1) / 2;
-		else *c1 = (col - 1) / 2;
-		*c2 = *c1;
-		*r1 = (row - 1) / 2;
-		*r2 = (row + 1) / 2;
-	}
-	
-	drawLine(state, *r1, *c1, *r2, *c2);
-}
-
 // Helper function to count the edges on a box.
 int countEdges(GameState *state, int row, int col) {
 	int count = 0;
@@ -75,65 +39,78 @@ int countEdges(GameState *state, int row, int col) {
 }
 
 void generateMediumMove(GameState *state, int *r1, int *c1, int *r2, int *c2) {
-	// alt_row & alt_col if in case there are no winning moves, we choose boxes with 0 or 1 edges.
-    int alt_row = -1, alt_col = -1;
-    for (int row = 1; row < 2 * ROW_SIZE - 1; row += 2) {
-        for (int col = 1; col < 2 * COL_SIZE - 1; col += 2) {
-			// if the box is not closed yet.
-            if (state->board[row][col] == ' ') {
-				// count the edges of the box.
-                int count = countEdges(state, row, col);
-				// There is a winning move!
-                if (count == 3) {
-					// need to decide which edge is missing.
-                    if (state->board[row + 1][col] == ' ') { // Top edge missing
-                        *r1 = (row + 1) / 2;
-                        *r2 = (row + 1) / 2;
-                        *c1 = (col - 1) / 2;
-                        *c2 = (col + 1) / 2;
-                        drawLine(state, *r1, *c1, *r2, *c2);
-                    } else if (state->board[row - 1][col] == ' ') { // Bottom edge missing
-                        *r1 = (row - 1) / 2;
-                        *r2 = (row - 1) / 2;
-                        *c1 = (col - 1) / 2;
-                        *c2 = (col + 1) / 2;
-                        drawLine(state, *r1, *c1, *r2, *c2);
-                    } else if (state->board[row][col + 1] == ' ') { // Left edge missing
-                        *r1 = (row - 1) / 2;
-                        *r2 = (row + 1) / 2;
-                        *c1 = (col + 1) / 2;
-                        *c2 = (col + 1) / 2;
-                        drawLine(state, *r1, *c1, *r2, *c2);
-                    } else if (state->board[row][col - 1] == ' ') { // Right edge missing
-                        *r1 = (row - 1) / 2;
-                        *r2 = (row + 1) / 2;
-                        *c1 = (col - 1) / 2;
-                        *c2 = (col - 1) / 2;
-                        drawLine(state, *r1, *c1, *r2, *c2);
-                    }
+	typedef struct {
+        int r1, c1, r2, c2;
+    } Move;
+
+    Move safe_moves[200];  // store safe moves
+    int safe_count = 0;
+
+    for (int row = 0; row <= 2 * (ROW_SIZE - 1); row++) {
+        for (int col = 0; col <= 2 * (COL_SIZE - 1); col++) {
+            if (state->board[row][col] != ' ') continue;
+
+            // check for horizontal line
+            if (row % 2 == 0 && col % 2 == 1) {
+                int r = row / 2;
+                int c1_temp = (col - 1) / 2;
+                int c2_temp = (col + 1) / 2;
+
+                // simulate move
+                state->board[row][col] = '-';
+                int box_up = (row == 0 ? -1 : countEdges(state, row - 1, col));   // box above
+                int box_down = (row == 2 * (ROW_SIZE - 1)? -1 : countEdges(state, row + 1, col));  // box below
+
+                if(box_up == 4 || box_down == 4) {
+					*r1 = r;
+					*c1 = c1_temp;
+					*r2 = r;
+					*c2 = c2_temp;
 					return;
+				}
+				else if ((box_up < 3) && (box_down < 3)) {
+                    safe_moves[safe_count++] = (Move){r, c1_temp, r, c2_temp};
+				}
+
+                state->board[row][col] = ' '; // undo
+            }
+
+
+            // c for vertical line
+            if (row % 2 == 1 && col % 2 == 0) {
+                int c = col / 2;
+                int r1_temp = (row - 1) / 2;
+                int r2_temp = (row + 1) / 2;
+
+                state->board[row][col] = '|';
+                int box_left = (col == 0 ? -1 : countEdges(state, row, col - 1));   // box left
+                int box_right = (col == 2 * (COL_SIZE - 1) ? -1 : countEdges(state, row, col + 1)); // box right
+
+				if(box_left == 4 || box_right == 4) {
+					*c1 = c;
+					*c2 = c;
+					*r1 = r1_temp;
+					*r2 = r2_temp;
+					return;
+				}
+                else if ((box_left < 3) && (box_right < 3)) {
+                    safe_moves[safe_count++] = (Move){r1_temp, c, r2_temp, c};
                 }
-				// No winning moves. At least don't help the opponent!
-				// Priotrize boxes with 0 edges (less risky).
-                else if (count == 0) {
-                    alt_row = row;
-					alt_col = col;
-                }
-				// No boxes with 0 edges found? Second priority: boxes with 1 edge.
-				else if (alt_row == -1 && alt_col == -1 && count == 1) {
-                    alt_row = row;
-					alt_col = col;
-                }
+
+                state->board[row][col] = ' '; // undo
             }
         }
     }
 
-	// If there is no winning move and there are boxes with 0 or 1 edges.
-    if (alt_row != -1) {
-       drawRandomLine(state, r1, c1, r2, c2, alt_row, alt_col);
-		return;
+    if (safe_count > 0) {
+        int pick = rand() % safe_count;
+        *r1 = safe_moves[pick].r1;
+        *c1 = safe_moves[pick].c1;
+        *r2 = safe_moves[pick].r2;
+        *c2 = safe_moves[pick].c2;
+        drawLine(state, *r1, *c1, *r2, *c2);
     }
-
-	// If all the options are either boxes with 2 edges or closed boxes. Doesn't matter; play random move.
-    generateEasyMove(state, r1, c1, r2, c2);
+	else {
+		generateEasyMove(state, r1, c1, r2, c2);
+	}
 }
