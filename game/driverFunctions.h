@@ -2,10 +2,11 @@
 #ifndef DRIVER_FUNCTIONS_H
 #define DRIVER_FUNCTIONS_H
 
+
+
 #define	ROW_SIZE 5
 #define COL_SIZE 6
 #define BOXES (ROW_SIZE * COL_SIZE)
-//#include "botFunctions.h"
 
 
 typedef struct {
@@ -18,8 +19,6 @@ typedef struct {
 
 void initializeGame(GameState *state);
 void twoPlayer(GameState *state);
-void easyMode(GameState *state);
-void mediumMode(GameState *state);
-void hardMode(GameState *state);
+void bot(GameState *state, int mode);
 
 #endif

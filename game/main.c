@@ -43,12 +43,7 @@ int main() {
 			while (getchar() != '\n');
 		}
 		printf("******************************************************************************\n");
-		if(mode == 1)
-			easyMode(state);
-		else if(mode == 2) 
-			mediumMode(state);
-		else if(mode == 3)
-			hardMode(state);
+		bot(state, mode);
 
 	}
 	displayBoard(state);
