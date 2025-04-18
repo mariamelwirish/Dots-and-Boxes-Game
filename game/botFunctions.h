@@ -5,7 +5,6 @@
 #include <time.h>
 #include <stdio.h>
 #include "boardFunctions.h"
-#include "tempHard.h"
 
 
 void generateEasyMove(GameState *state, int *r1, int *c1, int *r2, int *c2);
