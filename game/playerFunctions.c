@@ -48,8 +48,8 @@ void switchTurn(GameState *state) {
 void calculateScores(GameState *state, int r1, int c1, int r2, int c2) {
 	int result = checkBox(state, r1, c1, r2, c2);
     if(result != 0) {
-        state->score_a += (state->cur_player == 0 ? result : 0);
-		state->score_b += (state->cur_player == 1 ? result : 0);
+        state->scores[0] += (state->cur_player == 0 ? result : 0);
+		state->scores[1] += (state->cur_player == 1 ? result : 0);
     }
     else {
         switchTurn(state);
@@ -58,10 +58,10 @@ void calculateScores(GameState *state, int r1, int c1, int r2, int c2) {
 
 // announce the winner
 void announceWinner(GameState *state) {
-    if(state->score_a > state->score_b) {
+    if(state->scores[0] > state->scores[1]) {
         printf("Player A wins!\n");
     }
-    else if(state->score_b > state->score_a) {
+    else if(state->scores[0] < state->scores[1]) {
         printf("Player B wins!\n");
     }
     else {

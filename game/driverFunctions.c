@@ -19,8 +19,8 @@ void initializeGame(GameState *state) {
 	}
 
 	// Setting scores to 0.
-	state->score_a = 0;
-	state->score_b = 0;
+	state->scores[0] = 0;
+	state->scores[1] = 0;
 
 	// Player 1 starts.
 	state->cur_player = 0;
@@ -39,8 +39,8 @@ void twoPlayer(GameState *state) {
 		getPlayerMove(state, &r1, &c1, &r2, &c2);
 		calculateScores(state, r1, c1, r2, c2);
 		printf("******************************************************************************\n");
-		printf("Player A score: %d\n", state->score_a);
-		printf("Player B score: %d\n", state->score_b);
+		printf("Player A score: %d\n", state->scores[0]);
+		printf("Player B score: %d\n", state->scores[1]);
 		printf("******************************************************************************\n");
 	} while (!isGameOver(state));
 	
@@ -54,7 +54,7 @@ void bot(GameState *state, int mode) {
             displayBoard(state);
             printf("Player A's turn. Enter your move (row1 col1 row2 col2): ");
             
-            getPlayerMove(state, &r1, &c1, &r2, &c2);
+            generateParallelMinimaxMove(state, &r1, &c1, &r2, &c2);
            
         } else {
             // Bot turn: do not display the board; instead, show bot's chosen move.
@@ -69,8 +69,8 @@ void bot(GameState *state, int mode) {
         }
         calculateScores(state, r1, c1, r2, c2);
 		printf("******************************************************************************\n");
-		printf("Player A score: %d\n", state->score_a);
-		printf("Player B score: %d\n", state->score_b);
+		printf("Player A score: %d\n", state->scores[0]);
+		printf("Player B score: %d\n", state->scores[1]);
 		printf("******************************************************************************\n");
     }
 }

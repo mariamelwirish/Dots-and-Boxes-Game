@@ -10,8 +10,7 @@
 
 
 typedef struct {
-    int score_a;
-    int score_b;
+    int scores[2];
     int no_boxes;
     int cur_player;
 	char board[2 * ROW_SIZE - 1][2 * COL_SIZE - 1];

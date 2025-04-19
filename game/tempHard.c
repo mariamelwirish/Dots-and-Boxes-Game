@@ -1,8 +1,8 @@
 #include "tempHard.h"
 
 int flag = 0;
-
-int boxes[4] = {20, 0, 0, 0};
+char my_char = ' ', opp_char = ' ';
+int my_turn = -1;
 
 int max(int a, int b) {
     return (a > b) ? a : b;
@@ -12,160 +12,82 @@ int min(int a, int b) {
     return (a < b) ? a : b;
 }
 
-
 // A function to determine the game phase (opening, midgame, endgame) to determine which algorithm to play.
 GamePhase getGamePhase(GameState *state) {
-    //if((boxes[0] + boxes[1]) == 0 || state->no_boxes >= 0.8 * BOXES)
-    //    return ENDGAME;
-    if((boxes[0] + boxes[1]) >= 0.6 * (BOXES - state->no_boxes))
-        return OPENING;
-    else return MIDGAME;
-}
+    int loose_boxes = 0, total_boxes = (ROW_SIZE - 1) * (COL_SIZE - 1);
+    int filled_lines = 0, total_lines = (ROW_SIZE * (COL_SIZE - 1)) + ((ROW_SIZE - 1) * COL_SIZE);
+    bool end_game = true;
 
-
-// A function for opening (when the boxes with 0 or 1 edges >= 60% of the empty boxes).
-void generateSafeMove(GameState *state, int *r1, int *c1, int *r2, int *c2) {
-    typedef struct {
-        int r1, c1, r2, c2, row, col;
-    } Move;
-
-
-    Move safe_moves[200];  // store safe moves
-    int safe_count = 0;
-
-
-    for (int row = 0; row <= 2 * (ROW_SIZE - 1); row++) {
-        for (int col = 0; col <= 2 * (COL_SIZE - 1); col++) {
-            if (state->board[row][col] != ' ') continue;
-
-
-            // check for horizontal line
-            if (row % 2 == 0 && col % 2 == 1) {
-                int r = row / 2;
-                int c1_temp = (col - 1) / 2;
-                int c2_temp = (col + 1) / 2;
-
-
-                // simulate move
-                state->board[row][col] = '-';
-
-
-                int box_left = countEdges(state, row - 1, col);   // box above
-                int box_right = countEdges(state, row + 1, col);  // box below
-
-
-                if ((box_left < 3) && (box_right < 3)) {
-                    safe_moves[safe_count++] = (Move){r, c1_temp, r, c2_temp, row, col};
-                }
-
-
-                state->board[row][col] = ' '; // undo
+    for (int row = 0; row < 2 * ROW_SIZE - 1; row++) {
+        for (int col = 0; col < 2 * COL_SIZE - 1; col++) {
+            if ((row % 2 == 0 && col % 2 == 1) || (row % 2 == 1 && col % 2 == 0)) {
+                if (state->board[row][col] != ' ')
+                    filled_lines++;
             }
-
-
-            // c for vertical line
-            if (row % 2 == 1 && col % 2 == 0) {
-                int c = col / 2;
-                int r1_temp = (row - 1) / 2;
-                int r2_temp = (row + 1) / 2;
-
-
-                state->board[row][col] = '|';
-
-
-                int boxTop = countEdges(state, row, col - 1);   // box left
-                int boxBottom = countEdges(state, row, col + 1); // box right
-
-
-                if ((boxTop < 3) && (boxBottom < 3)) {
-                    safe_moves[safe_count++] = (Move){r1_temp, c, r2_temp, c, row, col};
-                }
-
-
-                state->board[row][col] = ' '; // undo
+            if (row % 2 == 1 && col % 2 == 1 && state->board[row][col] == ' ') {
+                int edges = countEdges(state, row, col);
+                if (edges <= 1) loose_boxes++;
+                if (edges != 4 && edges != 2) end_game = false;
             }
         }
     }
 
+    float loose_ratio = (float)loose_boxes / total_boxes;
+    float progress = (float)filled_lines / total_lines;
 
-    if (safe_count > 0) {
-        int pick = rand() % safe_count;
-        *r1 = safe_moves[pick].r1;
-        *c1 = safe_moves[pick].c1;
-        *r2 = safe_moves[pick].r2;
-        *c2 = safe_moves[pick].c2;
-		boxes[countEdges(state, safe_moves[pick].row, safe_moves[pick].col)]--;
-        drawLine(state, *r1, *c1, *r2, *c2);
-		boxes[countEdges(state, safe_moves[pick].row, safe_moves[pick].col)]++;
-		
+    if (loose_ratio >= 0.2 && progress < 0.2) {
+        return OPENING;
     }
+
+    else if (end_game) {
+        return ENDGAME;
+    }
+
+    else
+        return MIDGAME;
 }
 
 
+
 // Helper function to evaluate the board for minimax.
-
-
-// same loop as generateMediumMove
-/*
- Heuristics:
- +2 for bot box
--2 for opponent box
--1 for 3-edged boxes (danger)
-+1 for 1-edged boxes (potential chain)
-*/
 int evaluateBoard(GameState *state) {
     int eval = 0;
     int max_row = 2 * ROW_SIZE - 1;
     int max_col = 2 * COL_SIZE - 1;
-   
-    // Iterate over each box center (at odd indices).
+
     for (int row = 1; row < max_row; row += 2) {
         for (int col = 1; col < max_col; col += 2) {
             char boxMark = state->board[row][col];
-            if (boxMark == 'A') {
-                // Opponent's box: subtract 2 points.
-                eval -= 2;
-            } else if (boxMark == 'B') {
-                // Bot's box: add 2 points.
-                eval += 2;
-            } else {
-                // Unclaimed box: count the drawn edges.
+            if (boxMark == my_char) eval += 2;
+            else if (boxMark == opp_char) eval -= 2;
+            else {
                 int edgeCount = countEdges(state, row, col);
                 if (edgeCount == 3) {
-                    // A nearly complete box is dangerous.
-                    eval -= 1;
+                    eval -= 2; // avoid giving opponent a box
                 } else if (edgeCount == 1) {
-                    // A box with one edge is a potential chain.
-                    eval += 1;
+                    eval += 2; // potential trap
+                } else if (edgeCount == 2) {
+                    eval += 1; // may become chain in future
                 }
             }
+
         }
     }
-    return eval;
+    return eval + 3 * (state->scores[my_turn] - state->scores[!my_turn]);
+
 }
 
-
-
-
-
-
-////}
-
-
-// minimax Algorithm Body.
+// Minimax algorithm with alpha-beta pruning
 int minimax(GameState *state, int depth, bool bot, int alpha, int beta) {
-    // In case recursion is finished OR the game has ended!
-    if (depth == 0 || state->no_boxes == (ROW_SIZE - 1) * (COL_SIZE - 1)) {
+    if (depth == 0 || state->no_boxes == (ROW_SIZE - 1) * (COL_SIZE - 1))
         return evaluateBoard(state);
-    }
 
-
-    int best_score = (bot ? INT_MIN : INT_MAX);
-
+    int best_score = bot ? INT_MIN : INT_MAX;
 
     for (int row = 0; row <= 2 * (ROW_SIZE - 1); row++) {
         for (int col = 0; col <= 2 * (COL_SIZE - 1); col++) {
             if (state->board[row][col] != ' ') continue;
+
             int r1, c1, r2, c2;
             if (row % 2 == 0 && col % 2 == 1) {
                 r1 = r2 = row / 2;
@@ -177,20 +99,12 @@ int minimax(GameState *state, int depth, bool bot, int alpha, int beta) {
                 r2 = r1 + 1;
             } else continue;
 
-
-            // Create a copy of the current board.
             GameState newState = *state;
-
-
             if (!drawLine(&newState, r1, c1, r2, c2)) continue;
 
-
             calculateScores(&newState, r1, c1, r2, c2);
-
-
-            bool is_bot = (newState.cur_player == 1);
+            bool is_bot = (newState.cur_player == my_turn);
             int result = minimax(&newState, depth - 1, is_bot, alpha, beta);
-
 
             if (bot) {
                 best_score = max(best_score, result);
@@ -200,129 +114,157 @@ int minimax(GameState *state, int depth, bool bot, int alpha, int beta) {
                 beta = min(beta, result);
             }
 
-
-            if (beta <= alpha)
-                return best_score;  // prune
+            if (beta <= alpha && best_score != INT_MAX && best_score != INT_MIN) return best_score;
         }
     }
-
 
     return best_score;
 }
 
-
-
-
-
-
-// A function for Mid-game.
-
-
+// Mid-game move generator using minimax
 void generateMinimaxMove(GameState *state, int *r1, int *c1, int *r2, int *c2) {
-	if(flag == 0) {
-		printf("In midgame\n");
-		flag = 1;
-	}
-		
+    my_turn = state->cur_player;
+    my_char = (my_turn == 0) ? 'A' : 'B';
+    opp_char = (my_turn == 0) ? 'B' : 'A';
     int bestEval = INT_MIN;
-    int bestMove[6] = { -1, -1, -1, -1 , -1, -1};
+    int bestMove[4] = {-1, -1, -1, -1};
 
-
-   
     for (int row = 0; row <= 2 * (ROW_SIZE - 1); row++) {
         for (int col = 0; col <= 2 * (COL_SIZE - 1); col++) {
-         
             if (state->board[row][col] != ' ') continue;
 
-
-            int r1, c1, r2, c2;
-            // Determine the move type based on board cell indices.
+            int r1_temp, c1_temp, r2_temp, c2_temp;
             if (row % 2 == 0 && col % 2 == 1) {
-               
-                r1 = r2 = row / 2;
-                c1 = (col - 1) / 2;
-                c2 = c1 + 1;
+                r1_temp = r2_temp = row / 2;
+                c1_temp = (col - 1) / 2;
+                c2_temp = c1_temp + 1;
             } else if (row % 2 == 1 && col % 2 == 0) {
-               
-                c1 = c2 = col / 2;
-                r1 = (row - 1) / 2;
-                r2 = r1 + 1;
-            } else {
-                continue;
-            }
+                c1_temp = c2_temp = col / 2;
+                r1_temp = (row - 1) / 2;
+                r2_temp = r1_temp + 1;
+            } else continue;
 
-
-            // Create a copy of the current game state to simulate the move.
             GameState tempState = *state;
-            if (!drawLine(&tempState, r1, c1, r2, c2))
-                continue; // Skip if the move is invalid meaning line already drawn.
+            if (!drawLine(&tempState, r1_temp, c1_temp, r2_temp, c2_temp)) continue;
 
-
-         
-            calculateScores(&tempState, r1, c1, r2, c2);
-
-
-            // Determine whose turn it is after the move.
-            bool nextBotTurn = (tempState.cur_player == 1);
-
-
-            // Evaluate this move using minimax.
+            calculateScores(&tempState, r1_temp, c1_temp, r2_temp, c2_temp);
+            bool nextBotTurn = (tempState.cur_player == my_turn);
             int eval = minimax(&tempState, DEPTH - 1, nextBotTurn, INT_MIN, INT_MAX);
 
-
-            // Keep track if this move is the best so far.
             if (eval > bestEval) {
                 bestEval = eval;
-                bestMove[0] = r1;
-                bestMove[1] = c1;
-                bestMove[2] = r2;
-                bestMove[3] = c2;
-				bestMove[4] = row;
-				bestMove[5] = col;
+                bestMove[0] = r1_temp;
+                bestMove[1] = c1_temp;
+                bestMove[2] = r2_temp;
+                bestMove[3] = c2_temp;
             }
         }
     }
 
-
     if (bestMove[0] != -1) {
-        // A valid move was found. Set output parameters and draw the move.
         *r1 = bestMove[0];
         *c1 = bestMove[1];
         *r2 = bestMove[2];
         *c2 = bestMove[3];
-		boxes[countEdges(state, bestMove[4], bestMove[5])]--;
         drawLine(state, *r1, *c1, *r2, *c2);
-		boxes[countEdges(state, bestMove[4], bestMove[5])]++;
-       
     }
 }
 
+#define MAX_MOVES 200
 
 
+typedef struct {
+    GameState state;
+    int r1, c1, r2, c2;
+    int score;
+    bool is_valid;
+} MinimaxThreadData;
 
+void *evaluateMoveThread(void *arg) {
+    MinimaxThreadData *data = (MinimaxThreadData *)arg;
+    if (!drawLine(&data->state, data->r1, data->c1, data->r2, data->c2)) {
+        data->is_valid = false;
+        data->score = INT_MIN;
+        return NULL;
+    }
 
-
-
-
-// A function for End-game (when all chains are formed).
-void generateParityChainMove(GameState *state, int *r1, int *c1, int *r2, int *c2) {
-
-
+    calculateScores(&data->state, data->r1, data->c1, data->r2, data->c2);
+    bool next_bot = (data->state.cur_player == my_turn);
+    data->score = minimax(&data->state, DEPTH - 1, next_bot, INT_MIN, INT_MAX);
+    data->is_valid = true;
+    return NULL;
 }
+
+void generateParallelMinimaxMove(GameState *state, int *r1, int *c1, int *r2, int *c2) {
+    my_turn = state->cur_player;
+    my_char = (my_turn == 0) ? 'A' : 'B';
+    opp_char = (my_turn == 0) ? 'B' : 'A';
+    pthread_t threads[MAX_MOVES];
+    MinimaxThreadData thread_data[MAX_MOVES];
+    int thread_count = 0;
+
+    for (int row = 0; row <= 2 * (ROW_SIZE - 1); row++) {
+        for (int col = 0; col <= 2 * (COL_SIZE - 1); col++) {
+            if (state->board[row][col] != ' ') continue;
+
+            int tr1, tc1, tr2, tc2;
+            if (row % 2 == 0 && col % 2 == 1) {
+                tr1 = tr2 = row / 2;
+                tc1 = (col - 1) / 2;
+                tc2 = tc1 + 1;
+            } else if (row % 2 == 1 && col % 2 == 0) {
+                tc1 = tc2 = col / 2;
+                tr1 = (row - 1) / 2;
+                tr2 = tr1 + 1;
+            } else continue;
+
+            if (thread_count >= MAX_MOVES) continue; // prevent overflow
+
+            MinimaxThreadData *data = &thread_data[thread_count];
+            data->state = *state;
+            data->r1 = tr1;
+            data->c1 = tc1;
+            data->r2 = tr2;
+            data->c2 = tc2;
+            data->score = INT_MIN;
+            data->is_valid = false;
+
+            pthread_create(&threads[thread_count], NULL, evaluateMoveThread, data);
+            thread_count++;
+        }
+    }
+
+    for (int i = 0; i < thread_count; i++) {
+        pthread_join(threads[i], NULL);
+    }
+
+    int best_eval = INT_MIN;
+    int best_index = -1;
+    for (int i = 0; i < thread_count; i++) {
+        if (thread_data[i].is_valid && thread_data[i].score > best_eval) {
+            best_eval = thread_data[i].score;
+            best_index = i;
+        }
+    }
+
+    if (best_index != -1) {
+        *r1 = thread_data[best_index].r1;
+        *c1 = thread_data[best_index].c1;
+        *r2 = thread_data[best_index].r2;
+        *c2 = thread_data[best_index].c2;
+        drawLine(state, *r1, *c1, *r2, *c2);
+    }
+}
+
 
 
 // The main function to generate hard move.
 void generateHardMove(GameState *state, int *r1, int *c1, int *r2, int *c2) {
-	
     GamePhase phase = getGamePhase(state);
-	printf("%d %d %d %d", boxes[0], boxes[1], boxes[2], boxes[3]);
     if (phase == OPENING) {
-        generateSafeMove(state, r1, c1, r2, c2);
+        generateMediumMove(state, r1, c1, r2, c2);
     }
 	else {
-        generateMinimaxMove(state, r1, c1, r2, c2);
+	    generateParallelMinimaxMove(state, r1, c1, r2, c2);
 	}
-    //} else if (phase == ENDGAME) {
-    //    generateParityChainMove(state, r1, c1, r2, c2);
-    //}
 }
