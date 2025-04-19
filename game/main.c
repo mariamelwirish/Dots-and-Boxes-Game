@@ -3,17 +3,20 @@
 #include "driverFunctions.c"
 #include "botFunctions.c"
 #include "tempHard.c"
-
+#include <time.h>
 
 // main function calls playGame
 int main() {
+	clock_t start, end;
+	double cpu_time_used;
+
 	GameState *state = (GameState *) malloc(sizeof(GameState)); 
 	initializeGame(state);
 	srand((unsigned int) time(NULL)); 
 	// Ask user to select mode and handle it.
 	int choice;
 	while (true) {
-		printf("Select game mode:\n");
+		printf("Select game mode: \n");
 		printf("1. Play against another player.\n");
 		printf("2. Play against a bot.\n");
 		printf("Enter your choice (1 or 2): ");
@@ -31,7 +34,7 @@ int main() {
 	} else {
 		int mode;
 		while(true) {
-			printf("Select bot mode:\n");
+			printf("Select bot mode: \n");
 			printf("1. Easy Mode.\n");
 			printf("2. Medium Mode.\n");
 			printf("3. Hard Mode.\n");
@@ -43,9 +46,18 @@ int main() {
 			while (getchar() != '\n');
 		}
 		printf("******************************************************************************\n");
+
+
+		start = clock();
 		bot(state, mode);
 
 	}
 	displayBoard(state);
 	announceWinner(state);
+
+
+	end = clock();
+	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+
+	printf("Time taken: %.6f seconds\n", cpu_time_used);
 }
