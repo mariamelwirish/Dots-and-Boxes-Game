@@ -5,6 +5,24 @@
 #include "tempHard.h"
 #include "driverFunctions.h"  
 
+
+
+/**
+ * void initializeGame(GameState *state)
+ *
+ * Requires:
+ *      - state != NULL
+ *      - state points to a valid GameState struct.
+ *
+ * Effects:
+ *      - Initializes the game board with dots (.) and empty spaces.
+ *      - Sets both players' scores to 0.
+ *      - Sets the number of completed boxes to 0.
+ *      - Sets the current player to 0 (Player A).
+ *
+ * Returns:
+ *      None.
+ */
 void initializeGame(GameState *state) {
 	// Setting up the board.
 	for(int row = 0; row <= 2 * (ROW_SIZE - 1); row++) {
@@ -29,6 +47,23 @@ void initializeGame(GameState *state) {
 	state->no_boxes = 0;
 }
 
+
+/**
+ * void twoPlayer(GameState *state)
+ *
+ * Requires:
+ *      - state != NULL
+ *      - state is properly initialized using initializeGame.
+ *
+ * Effects:
+ *      - Runs the main game loop for two human players until the game ends.
+ *      - Repeatedly displays the board, prompts for player input, validates moves,
+ *        calculates scores, and switches turns.
+ *      - Updates the GameState after each move.
+ *
+ * Returns:
+ *      None.
+ */
 // the main function to run the game - called in main.c
 void twoPlayer(GameState *state) {
 	
@@ -45,7 +80,26 @@ void twoPlayer(GameState *state) {
 	} while (!isGameOver(state));
 	
 }
-
+/**
+ * void bot(GameState *state, int mode)
+ *
+ * Requires:
+ *      - state != NULL
+ *      - state is properly initialized using initializeGame.
+ *      - mode belongs to  {1, 2, 3}, where:
+ *            1 → Easy Bot
+ *            2 → Medium Bot
+ *            3 → Hard Bot
+ *
+ * Effects:
+ *      - Runs the game loop between a human player (Player A) and a bot (Player B) until the game ends.
+ *      - Prompts the user for input on their turn, and lets the bot make a move on its turn.
+ *      - Selects bot behavior based on the mode.
+ *      - Updates the GameState after each move and prints score updates.
+ *
+ * Returns:
+ *      None.
+ */
 void bot(GameState *state, int mode) {
     while (!isGameOver(state)) {
         int r1, c1, r2, c2;

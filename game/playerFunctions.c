@@ -1,5 +1,27 @@
 #include "playerFunctions.h"
 
+
+/**
+ * void getPlayerMove(GameState *state, int *r1, int *c1, int *r2, int *c2)
+ *
+ * Requires:
+ *      - state != NULL
+ *      - r1, c1, r2, c2 != NULL
+ *
+ * Effects:
+ *      - Prompts the user for a move (two dots).
+ *      - Validates that the move is:
+ *          - Four integers
+ *          - Within board bounds
+ *          - Connects two adjacent dots (horizontal or vertical)
+ *          - Does not overwrite an existing line
+ *      - Updates the board by drawing the line once a valid move is entered
+ *      - Stores the validated move coordinates in *r1, *c1, *r2, *c2
+ *
+ * Returns:
+ *      - None
+ */
+
 void getPlayerMove(GameState *state, int *r1, int *c1, int *r2, int *c2) {
     while (1) {
         if (scanf("%d %d %d %d", r1, c1, r2, c2) != 4) {
@@ -34,15 +56,57 @@ void getPlayerMove(GameState *state, int *r1, int *c1, int *r2, int *c2) {
     }
 }
 
+/**
+ * int isGameOver(GameState *state)
+ *
+ * Requires:
+ *      - state != NULL
+ *
+ * Effects:
+ *      - Reads state->no_boxes to determine game completion
+ *
+ * Returns:
+ *      - 1 if all boxes are completed 
+ *      - 0 otherwise
+ */
 // checks if all boxes are drawn (i.e. if game is over)
 int isGameOver(GameState *state) {
     return (state->no_boxes == 20 ? 1 : 0);
 }
 
+
+/**
+ * void switchTurn(GameState *state)
+ *
+ * Requires:
+ *      - state != NULL
+ *
+ * Effects:
+ *      - Flips the current player (state->cur_player)
+ *        between 0 (Player A) and 1 (Player B)
+ *
+ * Returns:
+ *      - None
+ */
 // switch turn when needed
 void switchTurn(GameState *state) {
     state->cur_player = !(state->cur_player);
 }
+/**
+ * void calculateScores(GameState *state, int r1, int c1, int r2, int c2)
+ *
+ * Requires:
+ *      - state != NULL
+ *      - Coordinates (r1, c1) and (r2, c2) must correspond to a valid move that was just drawn
+ *
+ * Effects:
+ *      - Calls checkBox to determine how many boxes were completed
+ *      - Increments the current player’s score based on completed boxes
+ *      - If no boxes were completed, switches turn to the other player
+ *
+ * Returns:
+ *      - None
+ */
 
 // calculate the scores each time a line is drawn
 void calculateScores(GameState *state, int r1, int c1, int r2, int c2) {
@@ -55,7 +119,22 @@ void calculateScores(GameState *state, int r1, int c1, int r2, int c2) {
         switchTurn(state);
     }
 }
-
+/**
+ * void announceWinner(GameState *state)
+ *
+ * Requires:
+ *      - state != NULL
+ *
+ * Effects:
+ *      - Compares player scores in state->scores
+ *      - Prints the result:
+ *          - Player A wins
+ *          - Player B wins
+ *          - Tie
+ *
+ * Returns:
+ *      - None
+ */
 // announce the winner
 void announceWinner(GameState *state) {
     if(state->scores[0] > state->scores[1]) {
