@@ -1,4 +1,4 @@
-#include "playerFunctions.h"
+#include "headers.h"
 
 void getPlayerMove(GameState *state, int *r1, int *c1, int *r2, int *c2) {
     while (1) {
@@ -36,7 +36,7 @@ void getPlayerMove(GameState *state, int *r1, int *c1, int *r2, int *c2) {
 
 // checks if all boxes are drawn (i.e. if game is over)
 int isGameOver(GameState *state) {
-    return (state->no_boxes == 20 ? 1 : 0);
+    return (state->no_boxes == BOXES ? 1 : 0);
 }
 
 // switch turn when needed
