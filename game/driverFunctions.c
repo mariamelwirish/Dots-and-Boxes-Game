@@ -1,4 +1,5 @@
 #include "headers.h"
+
 /**
  * void initializeGame(GameState *state)
  *
