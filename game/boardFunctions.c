@@ -1,4 +1,4 @@
-#include "boardFunctions.h"
+#include "headers.h"
 
 // helper function that will be used to determine if the line is "-" or "|"
 int fixedRow(GameState *state, int r1, int c1, int r2, int c2) {

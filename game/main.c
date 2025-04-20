@@ -1,9 +1,7 @@
 #include "boardFunctions.c"
-#include "playerFunctions.c"
-#include "driverFunctions.c"
 #include "botFunctions.c"
-#include "tempHard.c"
-#include <time.h>
+#include "driverFunctions.c"
+#include "playerFunctions.c"
 
 // main function calls playGame
 int main() {
@@ -12,7 +10,8 @@ int main() {
 
 	GameState *state = (GameState *) malloc(sizeof(GameState)); 
 	initializeGame(state);
-	srand((unsigned int) time(NULL)); 
+	srand((unsigned int) time(NULL));
+
 	// Ask user to select mode and handle it.
 	int choice;
 	while (true) {
