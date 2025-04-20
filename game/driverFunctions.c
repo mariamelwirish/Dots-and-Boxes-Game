@@ -125,3 +125,39 @@ void bot(GameState *state, int mode) {
 		printf("******************************************************************************\n");
     }
 }
+
+void testBots(GameState *state, int bot1, int bot2) {
+	while (!isGameOver(state)) {
+		(state->moves)++;
+		int r1, c1, r2, c2;
+		if (state->cur_player == 0) {
+			printf("Bot A's turn...\n");
+			if(bot1 == 1)
+				generateEasyMove(state, &r1, &c1, &r2, &c2);
+			else if(bot1 == 2)
+				generateMediumMove(state, &r1, &c1, &r2, &c2);
+			else if(bot1 == 3)
+				generateHardMove(state, &r1, &c1, &r2, &c2);
+
+			printf("Bot A chose move: (%d, %d) to (%d, %d)\n", r1, c1, r2, c2);
+			displayBoard(state);
+
+		} else {
+			printf("Bot B's turn...\n");
+			if(bot2 == 1)
+				generateEasyMove(state, &r1, &c1, &r2, &c2);
+			else if(bot2 == 2)
+				generateMediumMove(state, &r1, &c1, &r2, &c2);
+			else if(bot2 == 3)
+				generateHardMove(state, &r1, &c1, &r2, &c2);
+			printf("Bot B's turn.\n");
+			printf("Bot chose move: (%d, %d) to (%d, %d)\n", r1, c1, r2, c2);
+			displayBoard(state);
+		}
+		calculateScores(state, r1, c1, r2, c2);
+		printf("******************************************************************************\n");
+		printf("Bot A score: %d\n", state->scores[0]);
+		printf("Bot B score: %d\n", state->scores[1]);
+		printf("******************************************************************************\n");
+	}
+}

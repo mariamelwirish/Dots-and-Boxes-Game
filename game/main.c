@@ -8,7 +8,7 @@ int main() {
 	clock_t start, end;
 	double cpu_time_used;
 
-	GameState *state = (GameState *) malloc(sizeof(GameState)); 
+	GameState *state = (GameState *) malloc(sizeof(GameState));
 	initializeGame(state);
 	srand((unsigned int) time(NULL));
 

@@ -192,8 +192,6 @@ int min(int a, int b) {
 
 // A function to determine the game phase (opening, midgame) to determine which algorithm to play.
 GamePhase getGamePhase(GameState *state) {
-
-
     if (state->moves <= (0.15 * TOTAL_MOVES)) {
         return OPENING;
     }
@@ -216,11 +214,11 @@ int evaluateBoard(GameState *state) {
             else {
                 int edgeCount = countEdges(state, row, col);
                 if (edgeCount == 3) {
-                    eval -= 2; // avoid giving opponent a box
+                    eval -= 2;
                 } else if (edgeCount == 1) {
-                    eval += 2; // potential trap
+                    eval += 2;
                 } else if (edgeCount == 2) {
-                    eval += 1; // may become chain in future
+                    eval += 1;
                 }
             }
 
