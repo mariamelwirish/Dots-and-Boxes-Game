@@ -1,12 +1,4 @@
-#include <stdio.h>             
-#include "playerFunctions.h"   
-#include "botFunctions.h"      
-#include "boardFunctions.h" 
-#include "tempHard.h"
-#include "driverFunctions.h"  
-
-
-
+#include "headers.h"
 /**
  * void initializeGame(GameState *state)
  *
@@ -108,7 +100,7 @@ void bot(GameState *state, int mode) {
             displayBoard(state);
             printf("Player A's turn. Enter your move (row1 col1 row2 col2): ");
             
-            generateParallelMinimaxMove(state, &r1, &c1, &r2, &c2);
+            generateMediumMove(state, &r1, &c1, &r2, &c2);
            
         } else {
             // Bot turn: do not display the board; instead, show bot's chosen move.
