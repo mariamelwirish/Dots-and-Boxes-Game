@@ -37,6 +37,9 @@ void initializeGame(GameState *state) {
 
 	// Number of boxes = 0
 	state->no_boxes = 0;
+
+	// Initialize moves.
+	state->moves = 0;
 }
 
 
@@ -94,6 +97,7 @@ void twoPlayer(GameState *state) {
  */
 void bot(GameState *state, int mode) {
     while (!isGameOver(state)) {
+    	(state->moves)++;
         int r1, c1, r2, c2;
         if (state->cur_player == 0) {    // cur player = 0 means the player is a human
             // Human turn: display board and prompt for input.

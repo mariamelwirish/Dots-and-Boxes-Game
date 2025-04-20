@@ -8,8 +8,8 @@
 #include <stdbool.h>
 #include <time.h>
 
-#define	ROW_SIZE 4
-#define COL_SIZE 5
+#define	ROW_SIZE 5
+#define COL_SIZE 6
 #define BOXES ((ROW_SIZE - 1)* (COL_SIZE - 1))
 #define DEPTH 6
 #define THREADS 200

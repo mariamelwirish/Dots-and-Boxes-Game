@@ -130,13 +130,12 @@ int min(int a, int b) {
 GamePhase getGamePhase(GameState *state) {
 
 
-    if (state->moves <= (0.1 * TOTAL_MOVES)) {
-        printf("HERE\n");
+    if (state->moves <= (0.15 * TOTAL_MOVES)) {
         return OPENING;
     }
-
-    else
+    else {
         return MIDGAME;
+    }
 }
 
 // Helper function to evaluate the board for minimax.
