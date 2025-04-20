@@ -1,5 +1,27 @@
 #include "headers.h"
 
+
+/**
+ * void generateEasyMove(GameState *state, int *r1, int *c1, int *r2, int *c2)
+ *
+ * Requires:
+ *      - state != NULL
+ *      - The board within state must be initialized using initializeGame.
+ *      - The pointers r1, c1, r2, and c2 must be valid and not NULL.
+ *
+ * Effects:
+ *      - Randomly generates a move for the easy-level bot.
+ *      - The move is either horizontal or vertical and is randomly selected.
+ *      - Ensures the chosen move is valid meaning not already drawn.
+ *      - Updates the board by drawing the selected line.
+ *
+ * Returns:
+ *      - The function does not return a value but updates the r1, c1, r2, c2 coordinates
+ *        to reflect the selected move.
+ *      - The board is modified by placing a '-' or '|' character.
+ */
+
+
 void generateEasyMove(GameState *state, int *r1, int *c1, int *r2, int *c2) {
 	do {
 		int flag = rand() % 2; // random flag to select whether to draw horizontal (flag = 0) or vertical line (flag = 1)
@@ -28,6 +50,10 @@ void generateEasyMove(GameState *state, int *r1, int *c1, int *r2, int *c2) {
 	} while(drawLine(state, *r1, *c1, *r2, *c2) == 0); // to ensure that the line is not already drawn
 }
 
+
+
+
+
 // Helper function to count the edges on a box.
 int countEdges(GameState *state, int row, int col) {
 	int count = 0;
@@ -37,6 +63,28 @@ int countEdges(GameState *state, int row, int col) {
 	count += (state->board[row][col - 1] != ' ' ? 1 : 0);
 	return count;
 }
+
+/**
+ * void generateMediumMove(GameState *state, int *r1, int *c1, int *r2, int *c2)
+ *
+ * Requires:
+ *      - state != NULL
+ *      - The game board must be initialized and contain valid characters.
+ *      - The pointers r1, c1, r2, and c2 must be valid.
+ *
+ * Effects:
+ *      - Scans the board for all potential safe moves ,those being that they dont add a third edge.
+ *      - Prioritizes capturing boxes that are already surrounded by 3 edges by adding the fourth and completing the box..
+ *      - If no such move exists, selects randomly from a list of safe moves those that add a single edge or two.
+ *      - Falls back to generateEasyMove if no safe move is found.
+ *      - Updates the board with the selected move.
+ *
+ * Returns:
+ *      - Updates r1, c1, r2, c2 with the coordinates of the chosen move.
+ *      - The board is modified with the drawn line.
+ */
+
+
 
 void generateMediumMove(GameState *state, int *r1, int *c1, int *r2, int *c2) {
 	typedef struct {
@@ -126,6 +174,22 @@ int min(int a, int b) {
     return (a < b) ? a : b;
 }
 
+/**
+ * GamePhase getGamePhase(GameState *state)
+ *
+ * Requires:
+ *      - state != NULL
+ *      - The state->moves counter must be correctly incremented throughout the game.
+ *
+ * Effects:
+ *      - Analyzes the current number of moves to determine the phase of the game.
+ *
+ * Returns:
+ *      - OPENING if the game is in the first 15% of total moves.
+ *      - MIDGAME otherwise.
+ */
+
+
 // A function to determine the game phase (opening, midgame) to determine which algorithm to play.
 GamePhase getGamePhase(GameState *state) {
 
@@ -164,6 +228,22 @@ int evaluateBoard(GameState *state) {
     }
     return eval + 2 * (state->scores[my_turn] - state->scores[!my_turn]);
 }
+/**
+ * int minimax(GameState *state, int depth, bool bot, int alpha, int beta)
+ *
+ * Requires:
+ *      - state != NULL
+ *      - depth >= 0
+ *      - alpha and beta are valid initial bounds for pruning.
+ *
+ * Effects:
+ *      - Performs minimax search with alpha-beta pruning to a given depth.
+ *      - Simulates moves and recursively evaluates the board using evaluateBoard.
+ *
+ * Returns:
+ *      - The best evaluation score reachable from the current state.
+ *      - Maximizes score for bot, minimizes for opponent.
+ */
 
 // Minimax algorithm with alpha-beta pruning
 int minimax(GameState *state, int depth, bool bot, int alpha, int beta) {
@@ -208,6 +288,25 @@ int minimax(GameState *state, int depth, bool bot, int alpha, int beta) {
 
     return best_score;
 }
+
+
+/**
+ * void generateMinimaxMove(GameState *state, int *r1, int *c1, int *r2, int *c2)
+ *
+ * Requires:
+ *      - state != NULL
+ *      - r1, c1, r2, c2 are valid pointers.
+ *      - DEPTH must be defined globally.
+ *
+ * Effects:
+ *      - Iterates through all valid moves and applies minimax to each one.
+ *      - Selects the move with the highest minimax score.
+ *      - Updates the board with the best move found.
+ *
+ * Returns:
+ *      - Updates r1, c1, r2, c2 with the coordinates of the best move.
+ *      - The board is updated with the selected move.
+ */
 
 // Move generator using minimax
 void generateMinimaxMove(GameState *state, int *r1, int *c1, int *r2, int *c2) {
@@ -282,6 +381,25 @@ void *evaluateMoveThread(void *arg) {
     return NULL;
 }
 
+
+/**
+ * void generateParallelMinimaxMove(GameState *state, int *r1, int *c1, int *r2, int *c2)
+ *
+ * Requires:
+ *      - state != NULL
+ *      - PTHREADS and DEPTH must be defined globally.
+ *      - r1, c1, r2, c2 are valid pointers.
+ *
+ * Effects:
+ *      - Launches multiple threads to evaluate minimax scores in parallel.
+ *      - Each thread simulates one possible move and computes its score.
+ *      - Selects the move with the highest score from all valid threads.
+ *
+ * Returns:
+ *      - Updates r1, c1, r2, c2 with the best evaluated move.
+ *      - The board is modified with the chosen move.
+ */
+
 // generateMinimax multithreaded edition
 void generateParallelMinimaxMove(GameState *state, int *r1, int *c1, int *r2, int *c2) {
     my_turn = state->cur_player;
@@ -344,6 +462,22 @@ void generateParallelMinimaxMove(GameState *state, int *r1, int *c1, int *r2, in
 }
 
 
+/**
+ * void generateHardMove(GameState *state, int *r1, int *c1, int *r2, int *c2)
+ *
+ * Requires:
+ *      - state != NULL
+ *      - r1, c1, r2, c2 are valid pointers.
+ *
+ * Effects:
+ *      - Determines the current game phase using getGamePhase.
+ *      - In the OPENING phase, uses generateMediumMove for safety.
+ *      - In the MIDGAME phase, applies generateParallelMinimaxMove for optimal move.
+ *
+ * Returns:
+ *      - Updates r1, c1, r2, c2 with the selected move coordinates.
+ *      - The board is updated to reflect the move.
+ */
 
 // The main function to generate hard move.
 void generateHardMove(GameState *state, int *r1, int *c1, int *r2, int *c2) {
