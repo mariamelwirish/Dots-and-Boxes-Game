@@ -150,7 +150,6 @@ void testBots(GameState *state, int bot1, int bot2) {
 				generateMediumMove(state, &r1, &c1, &r2, &c2);
 			else if(bot2 == 3)
 				generateHardMove(state, &r1, &c1, &r2, &c2);
-			printf("Bot B's turn.\n");
 			printf("Bot chose move: (%d, %d) to (%d, %d)\n", r1, c1, r2, c2);
 			displayBoard(state);
 		}
