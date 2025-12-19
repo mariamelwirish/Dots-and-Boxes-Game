@@ -209,8 +209,8 @@ int evaluateBoard(GameState *state) {
     for (int row = 1; row < max_row; row += 2) {
         for (int col = 1; col < max_col; col += 2) {
             char boxMark = state->board[row][col];
-            if (boxMark == my_char) eval += 2;
-            else if (boxMark == opp_char) eval -= 2;
+            if (boxMark == my_char) eval += 3;
+            else if (boxMark == opp_char) eval -= 3;
             else {
                 int edgeCount = countEdges(state, row, col);
                 if (edgeCount == 3) {
